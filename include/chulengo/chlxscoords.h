@@ -5,7 +5,7 @@
 #error "Only <chulengo.h> can be included directly."
 #endif
 
-#include <chulengo/cerror.h>
+#include <chulengo/chlerror.h>
 #include <glib.h>
 
 /**

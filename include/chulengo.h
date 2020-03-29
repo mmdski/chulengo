@@ -3,6 +3,6 @@
 
 #define __CHL_H_INSIDE__
 
-#include <chulengo/cxscoords.h>
+#include <chulengo/chlxscoords.h>
 
 #endif

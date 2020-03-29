@@ -1,4 +1,4 @@
-#include <chulengo/cerror.h>
+#include <glib.h>
 
 GQuark
 chl_error_quark (void)
