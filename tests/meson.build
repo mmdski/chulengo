@@ -13,3 +13,16 @@ test('testxscoords',
      testxscoords,
      env: test_env
      )
+
+vlgnd = find_program('valgrind', required : false)
+if vlgnd.found()
+
+     test('testxscoords_mem', vlgnd,
+          args : [
+               '--leak-check=full',
+               '--error-exitcode=33',
+               testxscoords.full_path()
+               ]
+          )
+          
+endif
