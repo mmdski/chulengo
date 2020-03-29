@@ -185,12 +185,13 @@ chl_xscoords_new (int n, double *station, double *elevation, GError **error)
               return NULL;
             }
         }
-      if (!isfinite (*(station + i)) && !isfinite (*(elevation + i)))
+      if (!isfinite (*(station + i)) || !isfinite (*(elevation + i)))
         {
           g_set_error (error,
                        CHL_ERROR,
                        CHL_ERROR_ARG,
                        "station and elevation values must be finite");
+          return NULL;
         }
     }
 
