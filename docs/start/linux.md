@@ -4,7 +4,7 @@
 
 ### Install the required packages
 ```
-$ sudo apt install clang-format-9 gcc libglib-2.0-dev python3-pip valgrind
+$ sudo apt install clang-format-9 gcc libglib2.0-dev python3-pip valgrind
 ```
 
 ### Install the required Python packages
