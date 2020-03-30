@@ -1,0 +1,6 @@
+autopep8
+gcovr; platform_system == 'Linux'
+meson
+ninja
+pylint
+sphinx
