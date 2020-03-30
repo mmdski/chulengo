@@ -3,4 +3,5 @@ gcovr; platform_system == 'Linux'
 meson
 ninja
 pylint
+recommonmark
 sphinx
