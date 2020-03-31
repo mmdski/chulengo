@@ -33,3 +33,7 @@ Cross section coordinates
 .. c:function:: void chl_xscoords_free (ChlXSCoords a)
 
     Frees a :c:type:`ChlXSCoords`.
+
+.. c:function:: int chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2)
+
+    Returns 1 if :c:data`a1` and :c:data`a2` are equal and 0 otherwise.

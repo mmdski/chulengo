@@ -46,4 +46,6 @@ chl_xscoords_new (int n, double *station, double *elevation, GError **error);
  */
 extern void chl_xscoords_free (ChlXSCoords a);
 
+extern int chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2);
+
 #endif

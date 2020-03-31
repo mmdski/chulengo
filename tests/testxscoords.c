@@ -5,30 +5,19 @@
 void
 test_xscoarray_new (void)
 {
-  int    n   = 4;
-  double y[] = { 0, 1, 2, 3 };
-  double z[] = { 0, 1, 2, 3 };
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 0, 1, 2, 3 };
 
-  GError **error = NULL;
+  GError *error = NULL;
 
-  ChlXSCoords ca = chl_xscoords_new (n, y, z, error);
+  ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
 
   g_assert_nonnull (ca);
   g_assert_null (error);
 
   chl_xscoords_free (ca);
-}
-
-void
-test_xscoarray_new_argerror (void)
-{
-  int    n           = 4;
-  double station[]   = { 1, 0, 2, 3 };
-  double elevation[] = { 0, 1, 2, 3 };
-
-  GError *error = NULL;
-
-  ChlXSCoords ca = NULL;
+  ca = NULL;
 
   // one coordinate
   ca = chl_xscoords_new (1, station, elevation, &error);
@@ -38,7 +27,9 @@ test_xscoarray_new_argerror (void)
   g_clear_error (&error);
 
   // non-ascending station
-  ca = chl_xscoords_new (n, station, elevation, &error);
+  station[0] = 1;
+  station[1] = 0;
+  ca         = chl_xscoords_new (n, station, elevation, &error);
   g_assert_null (ca);
   g_assert_nonnull (&error);
   g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
@@ -71,13 +62,47 @@ test_xscoarray_new_argerror (void)
   g_clear_error (&error);
 }
 
+void
+test_xscoarray_equal (void)
+{
+  int    n1   = 4;
+  int    n4   = 2;
+  double y1[] = { 0, 1, 2, 3 };
+  double z1[] = { 0, 1, 2, 3 };
+  double y2[] = { 4, 5, 6, 7 };
+  double z2[] = { 4, 5, 6, 7 };
+
+  GError *error = NULL;
+
+  ChlXSCoords ca1 = chl_xscoords_new (n1, y1, z1, &error);
+  g_assert_null (error);
+
+  ChlXSCoords ca2 = chl_xscoords_new (n1, y1, z1, &error);
+  g_assert_null (error);
+
+  ChlXSCoords ca3 = chl_xscoords_new (n1, y2, z2, &error);
+  g_assert_null (error);
+
+  ChlXSCoords ca4 = chl_xscoords_new (n4, y2, z2, &error);
+
+  g_assert_cmpint (chl_xscoords_equal (ca1, ca1), ==, 1);
+  g_assert_cmpint (chl_xscoords_equal (ca1, ca2), ==, 1);
+  g_assert_cmpint (chl_xscoords_equal (ca1, ca3), ==, 0);
+  g_assert_cmpint (chl_xscoords_equal (ca1, ca4), ==, 0);
+
+  chl_xscoords_free (ca1);
+  chl_xscoords_free (ca2);
+  chl_xscoords_free (ca3);
+  chl_xscoords_free (ca4);
+}
+
 int
 main (int argc, char *argv[])
 {
   g_test_init (&argc, &argv, NULL);
 
-  g_test_add_func ("/chl/xscoords/new/success", test_xscoarray_new);
-  g_test_add_func ("/chl/xscoords/new/argerror", test_xscoarray_new_argerror);
+  g_test_add_func ("/chl/xscoords/new", test_xscoarray_new);
+  g_test_add_func ("/chl/xscoords/eq", test_xscoarray_equal);
 
   return g_test_run ();
 }

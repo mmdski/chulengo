@@ -73,21 +73,21 @@ xscoord_free (XSCoordinate *c)
  * @c1: a #XSCoordinate
  * @c2: another #XSCoordinate
  *
- * Returns: 0 if @c1 and @c2 are equal
+ * Returns: 1 if @c1 and @c2 are equal, 0 otherwise
  */
 int
 xscoord_eq (XSCoordinate *c1, XSCoordinate *c2)
 {
   if (c1 == c2)
-    return 0;
+    return 1;
   /* either coordinate is NULL */
   if (!c1 || !c2)
-    return 1;
+    return 0;
 
   if (c1->station == c2->station && c1->elevation == c2->elevation)
-    return 0;
-  else
     return 1;
+  else
+    return 0;
 }
 
 /**
@@ -237,4 +237,27 @@ chl_xscoords_free (ChlXSCoords a)
   chl_free (a->coordinates);
 
   FREE (a);
+}
+
+int
+chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2)
+{
+
+  g_return_val_if_fail (a1 != NULL || a2 != NULL, -1);
+
+  if (a1 == a2)
+    return 1;
+
+  if (a1->length != a2->length)
+    return 0;
+
+  int n = a1->length;
+
+  for (int i = 0; i < n; i++)
+    {
+      if (!xscoord_eq (*(a1->coordinates + i), *(a2->coordinates + i)))
+        return 0;
+    }
+
+  return 1;
 }
