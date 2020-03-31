@@ -4,5 +4,6 @@ meson
 ninja
 pylint
 recommonmark
+rstcheck
 sphinx
 sphinx_rtd_theme
