@@ -5,3 +5,4 @@ ninja
 pylint
 recommonmark
 sphinx
+sphinx_rtd_theme
