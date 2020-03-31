@@ -3,8 +3,17 @@
 ## Set up the development environment
 
 ### Install the required packages
+
+On Ubuntu
+
 ```
-$ sudo apt install clang-format-9 gcc libglib-2.0-dev python3-pip valgrind
+$ sudo apt install clang-format-9 gcc libglib2.0-dev python3-pip valgrind
+```
+
+On Fedora, assuming gcc and pip3 are already installed
+
+```
+$ sudo dnf install glib2-devel clang valgrind
 ```
 
 ### Install the required Python packages
