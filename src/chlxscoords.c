@@ -259,5 +259,35 @@ chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2)
         return 0;
     }
 
+  if (a1->max_elevation != a2->max_elevation)
+    return 0;
+  if (a1->min_elevation != a2->min_elevation)
+    return 0;
+
   return 1;
+}
+
+ChlXSCoords
+chl_xscoords_copy (ChlXSCoords a)
+{
+  g_return_val_if_fail (a != NULL, NULL);
+
+  int n = a->length;
+
+  ChlXSCoords b;
+  NEW (b);
+  b->length        = n;
+  b->max_elevation = a->max_elevation;
+  b->min_elevation = a->min_elevation;
+
+  XSCoordinate **coords = chl_calloc (sizeof (XSCoordinate *), n);
+
+  for (int i = 0; i < n; i++)
+    {
+      *(coords + i) = xscoord_copy (*(a->coordinates + i));
+    }
+
+  b->coordinates = coords;
+
+  return b;
 }

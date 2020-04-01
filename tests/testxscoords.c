@@ -3,7 +3,7 @@
 #include <math.h>
 
 void
-test_xscoarray_new (void)
+test_xscoords_new (void)
 {
   int    n           = 4;
   double station[]   = { 0, 1, 2, 3 };
@@ -63,7 +63,7 @@ test_xscoarray_new (void)
 }
 
 void
-test_xscoarray_equal (void)
+test_xscoords_equal (void)
 {
   int    n1   = 4;
   int    n4   = 2;
@@ -96,13 +96,31 @@ test_xscoarray_equal (void)
   chl_xscoords_free (ca4);
 }
 
+void
+test_xscoords_copy (void)
+{
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 0, 1, 2, 3 };
+
+  GError *error = NULL;
+
+  ChlXSCoords a = chl_xscoords_new (n, station, elevation, &error);
+  ChlXSCoords b = chl_xscoords_copy (a);
+  g_assert_cmpint (chl_xscoords_equal (a, b), ==, 1);
+
+  chl_xscoords_free (a);
+  chl_xscoords_free (b);
+}
+
 int
 main (int argc, char *argv[])
 {
   g_test_init (&argc, &argv, NULL);
 
-  g_test_add_func ("/chl/xscoords/new", test_xscoarray_new);
-  g_test_add_func ("/chl/xscoords/eq", test_xscoarray_equal);
+  g_test_add_func ("/chl/xscoords/new", test_xscoords_new);
+  g_test_add_func ("/chl/xscoords/eq", test_xscoords_equal);
+  g_test_add_func ("/chl/xscoords/copy", test_xscoords_copy);
 
   return g_test_run ();
 }

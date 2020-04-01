@@ -48,4 +48,6 @@ extern void chl_xscoords_free (ChlXSCoords a);
 
 extern int chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2);
 
+extern ChlXSCoords chl_xscoords_copy (ChlXSCoords a);
+
 #endif
