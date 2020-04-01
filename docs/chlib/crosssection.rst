@@ -43,3 +43,17 @@ Cross section coordinates
     Creates a copy of :c:data:`a`. The returned cross section coordinate array
     is newly created and should be freed with :c:func:`chl_xscoords_free` when
     no longer in use.
+
+.. c:function:: double chl_xscoords_elevation (ChlXSCoords a, int i, GError **error)
+
+    Returns the elevation value of the :c:data:`i`-th coordinate.
+
+    Sets :c:data:`error` to :c:data:`CHL_ERROR_INDEX` and returns `-INFINITY` if :c:data:`i`
+    is outside of the bounds of the indices of :c:data:`a`.
+
+.. c:function:: double chl_xscoords_station (ChlXSCoords a, int i, GError **error)
+
+    Returns the station value of the :c:data:`i`-th coordinate.
+
+    Sets :c:data:`error` to :c:data:`CHL_ERROR_INDEX` and returns `-INFINITY` if :c:data:`i`
+    is outside of the bounds of the indices of :c:data:`a`.

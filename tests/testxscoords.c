@@ -113,6 +113,73 @@ test_xscoords_copy (void)
   chl_xscoords_free (b);
 }
 
+void
+test_xscoords_elevation (void)
+{
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 4, 5, 6, 7 };
+
+  double s;
+
+  GError *error = NULL;
+
+  ChlXSCoords a = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  for (int i = 0; i < n; i++)
+    {
+      g_assert_cmpfloat (
+          chl_xscoords_elevation (a, i, &error), ==, elevation[i]);
+      g_assert_null (error);
+    }
+
+  s = chl_xscoords_elevation (a, -1, &error);
+  g_assert_cmpint (isinf (s), ==, -1);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_INDEX));
+  g_clear_error (&error);
+
+  s = chl_xscoords_elevation (a, 5, &error);
+  g_assert_cmpint (isinf (s), ==, -1);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_INDEX));
+  g_clear_error (&error);
+
+  chl_xscoords_free (a);
+}
+
+void
+test_xscoords_station (void)
+{
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 4, 5, 6, 7 };
+
+  double s;
+
+  GError *error = NULL;
+
+  ChlXSCoords a = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  for (int i = 0; i < n; i++)
+    {
+      g_assert_cmpfloat (chl_xscoords_station (a, i, &error), ==, station[i]);
+      g_assert_null (error);
+    }
+
+  s = chl_xscoords_station (a, -1, &error);
+  g_assert_cmpint (isinf (s), ==, -1);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_INDEX));
+  g_clear_error (&error);
+
+  s = chl_xscoords_station (a, 5, &error);
+  g_assert_cmpint (isinf (s), ==, -1);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_INDEX));
+  g_clear_error (&error);
+
+  chl_xscoords_free (a);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -121,6 +188,8 @@ main (int argc, char *argv[])
   g_test_add_func ("/chl/xscoords/new", test_xscoords_new);
   g_test_add_func ("/chl/xscoords/eq", test_xscoords_equal);
   g_test_add_func ("/chl/xscoords/copy", test_xscoords_copy);
+  g_test_add_func ("/chl/xscoords/elevation", test_xscoords_elevation);
+  g_test_add_func ("/chl/xscoords/station", test_xscoords_station);
 
   return g_test_run ();
 }

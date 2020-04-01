@@ -243,7 +243,7 @@ int
 chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2)
 {
 
-  g_return_val_if_fail (a1 != NULL || a2 != NULL, -1);
+  g_return_val_if_fail (a1 != NULL && a2 != NULL, -1);
 
   if (a1 == a2)
     return 1;
@@ -290,4 +290,46 @@ chl_xscoords_copy (ChlXSCoords a)
   b->coordinates = coords;
 
   return b;
+}
+
+double
+chl_xscoords_elevation (ChlXSCoords a, int i, GError **error)
+{
+  g_assert_nonnull (a);
+  g_return_val_if_fail (error == NULL || *error == NULL, -INFINITY);
+
+  if (i < 0 || a->length - 1 < i)
+    {
+      g_set_error (
+          error, CHL_ERROR, CHL_ERROR_INDEX, "Index out of bounds: %i", i);
+      return -INFINITY;
+    }
+
+  XSCoordinate *c = *(a->coordinates + i);
+
+  if (c)
+    return c->elevation;
+  else
+    return NAN;
+}
+
+double
+chl_xscoords_station (ChlXSCoords a, int i, GError **error)
+{
+  g_assert_nonnull (a);
+  g_return_val_if_fail (error == NULL || *error == NULL, -INFINITY);
+
+  if (i < 0 || a->length - 1 < i)
+    {
+      g_set_error (
+          error, CHL_ERROR, CHL_ERROR_INDEX, "Index out of bounds: %i", i);
+      return -INFINITY;
+    }
+
+  XSCoordinate *c = *(a->coordinates + i);
+
+  if (c)
+    return c->station;
+  else
+    return NAN;
 }

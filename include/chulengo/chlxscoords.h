@@ -50,4 +50,8 @@ extern int chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2);
 
 extern ChlXSCoords chl_xscoords_copy (ChlXSCoords a);
 
+double chl_xscoords_elevation (ChlXSCoords a, int i, GError **error);
+
+double chl_xscoords_station (ChlXSCoords a, int i, GError **error);
+
 #endif

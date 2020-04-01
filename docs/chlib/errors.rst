@@ -25,9 +25,14 @@ for more information on handling errors.
 
         enum ChlError
         {
-            CHL_ERROR_ARG
+            CHL_ERROR_ARG,
+            CHL_ERROR_INDEX
         };
 
 .. c:var:: CHL_ERROR_ARG
 
     Error set when invalid arguments are passed to a function.
+
+.. c:var:: CHL_ERROR_INDEX
+
+    Index error
