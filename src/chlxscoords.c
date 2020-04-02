@@ -333,3 +333,19 @@ chl_xscoords_station (ChlXSCoords a, int i, GError **error)
   else
     return NAN;
 }
+
+double
+chl_xscoords_max_elev (ChlXSCoords a)
+{
+  g_return_val_if_fail (a != NULL, -INFINITY);
+
+  return a->max_elevation;
+}
+
+double
+chl_xscoords_min_elev (ChlXSCoords a)
+{
+  g_return_val_if_fail (a != NULL, -INFINITY);
+
+  return a->min_elevation;
+}
