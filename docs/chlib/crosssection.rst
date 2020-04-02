@@ -57,3 +57,11 @@ Cross section coordinates
 
     Sets :c:data:`error` to :c:data:`CHL_ERROR_INDEX` and returns `-INFINITY` if :c:data:`i`
     is outside of the bounds of the indices of :c:data:`a`.
+
+.. c:function:: double chl_xscoords_max_elev (ChlXSCoords a)
+
+    Returns the maximum elevation of the coordinates in :c:data:`a`.
+
+.. c:function:: double chl_xscoords_min_elev (ChlXSCoords a)
+
+    Returns the minimum elevation of the coordinates in :c:data:`a`.
