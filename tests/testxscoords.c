@@ -97,6 +97,40 @@ test_xscoords_equal (void)
 }
 
 void
+test_xscoords_length (void)
+{
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 0, 1, 2, 3 };
+
+  GError *error = NULL;
+
+  ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  g_assert_cmpint (chl_xscoords_length (ca), ==, n);
+
+  chl_xscoords_free (ca);
+}
+
+void
+test_xscoords_isempty (void)
+{
+  int    n           = 4;
+  double station[]   = { 0, 1, 2, 3 };
+  double elevation[] = { 0, 1, 2, 3 };
+
+  GError *error = NULL;
+
+  ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  g_assert_cmpint (chl_xscoords_isempty (ca), ==, 0);
+
+  chl_xscoords_free (ca);
+}
+
+void
 test_xscoords_copy (void)
 {
   int    n           = 4;
@@ -315,6 +349,8 @@ main (int argc, char *argv[])
 
   g_test_add_func ("/chl/xscoords/new", test_xscoords_new);
   g_test_add_func ("/chl/xscoords/eq", test_xscoords_equal);
+  g_test_add_func ("/chl/xscoords/length", test_xscoords_length);
+  g_test_add_func ("/chl/xscoords/isempty", test_xscoords_isempty);
   g_test_add_func ("/chl/xscoords/copy", test_xscoords_copy);
   g_test_add_func ("/chl/xscoords/elevation", test_xscoords_elevation);
   g_test_add_func ("/chl/xscoords/station", test_xscoords_station);
