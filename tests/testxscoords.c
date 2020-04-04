@@ -217,7 +217,7 @@ test_xscoords_min_elev (void)
 }
 
 void
-test_xscoords_sub_station (void)
+test_xscoords_sub_station_simple_error (void)
 {
   int    n           = 5;
   double station[]   = { 0, 0, 0.5, 1, 1 };
@@ -243,7 +243,19 @@ test_xscoords_sub_station (void)
   g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
   g_clear_error (&error);
 
+  sa = chl_xscoords_sub_station (ca, 0, 2, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
   sa = chl_xscoords_sub_station (ca, -10, 10, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
+  sa = chl_xscoords_sub_station (ca, 1, 0, &error);
   g_assert_null (sa);
   g_assert_nonnull (error);
   g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
@@ -289,6 +301,13 @@ test_xscoords_sub_station_double_triangle ()
   chl_xscoords_free (ca);
 }
 
+void
+test_xscoords_sub_station (void)
+{
+  test_xscoords_sub_station_simple_error ();
+  test_xscoords_sub_station_double_triangle ();
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -302,8 +321,6 @@ main (int argc, char *argv[])
   g_test_add_func ("/chl/xscoords/max elev", test_xscoords_max_elev);
   g_test_add_func ("/chl/xscoords/min elev", test_xscoords_min_elev);
   g_test_add_func ("/chl/xscoords/sub station", test_xscoords_sub_station);
-  g_test_add_func ("/chl/xscoords/sub station/double triangle",
-                   test_xscoords_sub_station_double_triangle);
 
   return g_test_run ();
 }
