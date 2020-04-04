@@ -39,6 +39,14 @@ Cross section coordinates
 
     Returns 1 if :c:data:`a1` and :c:data:`a2` are equal and 0 otherwise.
 
+.. c:function:: int chl_xscoords_length (ChlXSCoords a)
+
+    Returns the number of coordinates in :c:data:`a`
+
+.. c:function:: int chl_xscoords_isempty (ChlXSCoords a)
+
+    Returns 1 if :c:data:`a` is empty and 0 otherwise.
+
 .. c:function:: ChlXSCoords chl_xscoords_copy (ChlXSCoords a)
 
     Creates a copy of :c:data:`a`. The returned cross section coordinate array
