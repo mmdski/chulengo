@@ -58,4 +58,9 @@ extern double chl_xscoords_max_elev (ChlXSCoords a);
 
 extern double chl_xscoords_min_elev (ChlXSCoords a);
 
+ChlXSCoords chl_xscoords_sub_station (ChlXSCoords a,
+                                      double      left,
+                                      double      right,
+                                      GError **   error);
+
 #endif

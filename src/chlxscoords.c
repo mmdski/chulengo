@@ -221,6 +221,40 @@ chl_xscoords_new (int n, double *station, double *elevation, GError **error)
   return a;
 }
 
+static ChlXSCoords
+chl_xscoords_from_array (int n, XSCoordinate **array)
+{
+  g_assert (array);
+  g_assert (n > 2);
+
+  XSCoordinate * c;
+  XSCoordinate **coordinates = chl_calloc (n, sizeof (XSCoordinate *));
+  double         max_elev    = -INFINITY;
+  double         min_elev    = INFINITY;
+
+  for (int i = 0; i < n; i++)
+    {
+      c                  = *(array + i);
+      *(coordinates + i) = c;
+      if (c)
+        {
+          if (c->elevation > max_elev)
+            max_elev = c->elevation;
+          if (c->elevation < min_elev)
+            min_elev = c->elevation;
+        }
+    }
+
+  ChlXSCoords a;
+  NEW (a);
+  a->coordinates   = coordinates;
+  a->length        = n;
+  a->max_elevation = max_elev;
+  a->min_elevation = min_elev;
+
+  return a;
+}
+
 void
 chl_xscoords_free (ChlXSCoords a)
 {
@@ -274,20 +308,13 @@ chl_xscoords_copy (ChlXSCoords a)
 
   int n = a->length;
 
-  ChlXSCoords b;
-  NEW (b);
-  b->length        = n;
-  b->max_elevation = a->max_elevation;
-  b->min_elevation = a->min_elevation;
-
-  XSCoordinate **coords = chl_calloc (sizeof (XSCoordinate *), n);
+  XSCoordinate **coordinates = chl_calloc (n, sizeof (XSCoordinate *));
 
   for (int i = 0; i < n; i++)
-    {
-      *(coords + i) = xscoord_copy (*(a->coordinates + i));
-    }
+    *(coordinates + i) = xscoord_copy (*(a->coordinates + i));
 
-  b->coordinates = coords;
+  ChlXSCoords b = chl_xscoords_from_array (n, coordinates);
+  chl_free (coordinates);
 
   return b;
 }
@@ -348,4 +375,112 @@ chl_xscoords_min_elev (ChlXSCoords a)
   g_return_val_if_fail (a != NULL, -INFINITY);
 
   return a->min_elevation;
+}
+
+/* helper functions for chl_xscoords_sub_station */
+static int
+find_stat_lo_idx (ChlXSCoords a, int lo, int hi, double stat_lo)
+{
+  if (lo == hi)
+    {
+      while (lo > 0 && a->coordinates[lo - 1]->station >= stat_lo)
+        {
+          lo--;
+        }
+      return a->coordinates[lo]->station <= stat_lo ? lo : -1;
+    }
+
+  int mid = (hi + lo) / 2;
+
+  if (stat_lo < a->coordinates[mid]->station)
+    return find_stat_lo_idx (a, lo, mid, stat_lo);
+
+  int ret = find_stat_lo_idx (a, mid + 1, hi, stat_lo);
+
+  return ret == -1 ? mid : ret;
+}
+
+static int
+find_stat_hi_idx (ChlXSCoords a, int n, int lo, int hi, double stat_hi)
+{
+  if (lo == hi)
+    {
+      while (hi < n - 1 && a->coordinates[hi + 1]->station <= stat_hi)
+        {
+          hi++;
+        }
+      return a->coordinates[hi]->station >= stat_hi ? hi : -1;
+    }
+
+  int mid = (hi + lo) / 2;
+
+  if (stat_hi <= a->coordinates[mid]->station)
+    return find_stat_hi_idx (a, n, lo, mid, stat_hi);
+
+  int ret = find_stat_hi_idx (a, n, mid + 1, hi, stat_hi);
+
+  return ret == -1 ? mid : ret;
+}
+
+ChlXSCoords
+chl_xscoords_sub_station (ChlXSCoords a,
+                          double      left,
+                          double      right,
+                          GError **   error)
+{
+  g_return_val_if_fail (a != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+  int n = a->length;
+
+  if (right <= left)
+    {
+      g_set_error (
+          error, CHL_ERROR, CHL_ERROR_ARG, "right must be greater than left");
+      return NULL;
+    }
+
+  if (left < a->coordinates[0]->station ||
+      a->coordinates[n - 1]->station < right)
+    {
+      g_set_error (error,
+                   CHL_ERROR,
+                   CHL_ERROR_ARG,
+                   "left and right must be within the range of the stations of "
+                   "the corrdinate array");
+      return NULL;
+    }
+
+  int i  = find_stat_lo_idx (a, 0, n, left);
+  int j  = 0;
+  int hi = find_stat_hi_idx (a, n, 0, n, right);
+
+  XSCoordinate * c0;
+  XSCoordinate * c1;
+  XSCoordinate **array = chl_calloc (n, sizeof (XSCoordinate *));
+
+  c0 = a->coordinates[i];
+  c1 = a->coordinates[i + 1];
+
+  double eps = 1e-10;
+
+  if (fabs (c1->station - c0->station) <= eps)
+    array[j++] = xscoord_copy (c0);
+  else
+    array[j++] = xscoord_interpelevation (c0, c1, left);
+
+  while (++i < hi)
+    array[j++] = xscoord_copy (a->coordinates[i]);
+
+  c0 = a->coordinates[i - 1];
+  c1 = a->coordinates[i];
+  if (fabs (c1->station - c0->station) <= eps)
+    array[j++] = xscoord_copy (c1);
+  else
+    array[j++] = xscoord_interpelevation (c0, c1, right);
+
+  ChlXSCoords sa = chl_xscoords_from_array (j, array);
+  chl_free (array);
+
+  return sa;
 }
