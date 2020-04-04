@@ -216,6 +216,79 @@ test_xscoords_min_elev (void)
   chl_xscoords_free (a);
 }
 
+void
+test_xscoords_sub_station (void)
+{
+  int    n           = 5;
+  double station[]   = { 0, 0, 0.5, 1, 1 };
+  double elevation[] = { 1, 0, 0, 0, 1 };
+
+  GError *error = NULL;
+
+  ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  ChlXSCoords sa =
+      chl_xscoords_sub_station (ca, station[0], station[4], &error);
+  g_assert_null (error);
+
+  g_assert_true (chl_xscoords_equal (ca, sa) == 1);
+
+  chl_xscoords_free (sa);
+  sa = NULL;
+
+  sa = chl_xscoords_sub_station (ca, -1, 1, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
+  sa = chl_xscoords_sub_station (ca, -10, 10, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
+  chl_xscoords_free (ca);
+}
+
+void
+test_xscoords_sub_station_double_triangle ()
+{
+  int    n           = 9;
+  double station[]   = { 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
+  double elevation[] = { 1, 0.5, 0, 0.5, 1, 0.5, 0, 0.5, 1 };
+  double stat_exp1[] = { 0, 0.25, 0.5, 0.75, 1 };
+  double elev_exp1[] = { 1, 0.5, 0, 0.5, 1 };
+  double stat_exp2[] = { 1, 1.25, 1.5, 1.75, 2 };
+  double elev_exp2[] = { 1, 0.5, 0, 0.5, 1 };
+
+  GError *error = NULL;
+
+  ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
+  g_assert_null (error);
+
+  ChlXSCoords expected1 = chl_xscoords_new (5, stat_exp1, elev_exp1, &error);
+  g_assert_null (error);
+  ChlXSCoords sa1 = chl_xscoords_sub_station (ca, 0, 1, &error);
+  g_assert_null (error);
+
+  g_assert_true (chl_xscoords_equal (expected1, sa1) == 1);
+  chl_xscoords_free (sa1);
+  chl_xscoords_free (expected1);
+
+  ChlXSCoords expected2 = chl_xscoords_new (5, stat_exp2, elev_exp2, &error);
+  g_assert_null (error);
+  ChlXSCoords sa2 = chl_xscoords_sub_station (ca, 1, 2, &error);
+  g_assert_null (error);
+
+  g_assert_true (chl_xscoords_equal (expected2, sa2) == 0);
+  chl_xscoords_free (sa2);
+  chl_xscoords_free (expected2);
+
+  chl_xscoords_free (ca);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -228,6 +301,9 @@ main (int argc, char *argv[])
   g_test_add_func ("/chl/xscoords/station", test_xscoords_station);
   g_test_add_func ("/chl/xscoords/max elev", test_xscoords_max_elev);
   g_test_add_func ("/chl/xscoords/min elev", test_xscoords_min_elev);
+  g_test_add_func ("/chl/xscoords/sub station", test_xscoords_sub_station);
+  g_test_add_func ("/chl/xscoords/sub station/double triangle",
+                   test_xscoords_sub_station_double_triangle);
 
   return g_test_run ();
 }
