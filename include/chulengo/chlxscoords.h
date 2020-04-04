@@ -48,6 +48,10 @@ extern void chl_xscoords_free (ChlXSCoords a);
 
 extern int chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2);
 
+extern int chl_xscoords_length (ChlXSCoords a);
+
+extern int chl_xscoords_isempty (ChlXSCoords a);
+
 extern ChlXSCoords chl_xscoords_copy (ChlXSCoords a);
 
 extern double chl_xscoords_elevation (ChlXSCoords a, int i, GError **error);

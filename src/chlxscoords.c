@@ -301,6 +301,20 @@ chl_xscoords_equal (ChlXSCoords a1, ChlXSCoords a2)
   return 1;
 }
 
+int
+chl_xscoords_length (ChlXSCoords a)
+{
+  g_return_val_if_fail (a != NULL, -1);
+  return a->length;
+}
+
+int
+chl_xscoords_isempty (ChlXSCoords a)
+{
+  g_return_val_if_fail (a != NULL, -1);
+  return a->length == 0;
+}
+
 ChlXSCoords
 chl_xscoords_copy (ChlXSCoords a)
 {
