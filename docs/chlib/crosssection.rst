@@ -70,7 +70,7 @@ Cross section coordinates
     Returns the minimum elevation of the coordinates in :c:data:`a`.
 
 .. c:function:: ChlXSCoords chl_xscoords_sub_station (ChlXSCoords a, \
-    double left, double right, GError** error);
+    double left, double right, GError** error)
 
     Returns a sub-array of coordinates in :c:data:`a` defined by :c:data:`left`
     and :c:data:`right`. Sets :c:data:`error` to :c:data:`CHL_ARG_ERROR` if
