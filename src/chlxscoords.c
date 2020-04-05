@@ -27,7 +27,7 @@ typedef struct XSCoordinate
  *
  * Returns: a new coordinate
  */
-XSCoordinate *
+static XSCoordinate *
 xscoord_new (double station, double elevation)
 {
   XSCoordinate *c = chl_alloc (sizeof (XSCoordinate));
@@ -47,7 +47,7 @@ xscoord_new (double station, double elevation)
  *
  * Returns: a copy of @c
  */
-XSCoordinate *
+static XSCoordinate *
 xscoord_copy (XSCoordinate *c)
 {
   g_assert (c);
@@ -62,7 +62,7 @@ xscoord_copy (XSCoordinate *c)
  *
  * Returns: nothing
  */
-void
+static void
 xscoord_free (XSCoordinate *c)
 {
   chl_free (c);
@@ -75,7 +75,7 @@ xscoord_free (XSCoordinate *c)
  *
  * Returns: 1 if @c1 and @c2 are equal, 0 otherwise
  */
-int
+static int
 xscoord_eq (XSCoordinate *c1, XSCoordinate *c2)
 {
   if (c1 == c2)
@@ -104,7 +104,7 @@ xscoord_eq (XSCoordinate *c1, XSCoordinate *c2)
  *
  * Returns: an interpolated coordinate
  */
-XSCoordinate *
+static XSCoordinate *
 xscoord_interpelevation (XSCoordinate *c1, XSCoordinate *c2, double station)
 {
   g_assert (c1 && c2);
@@ -132,7 +132,7 @@ xscoord_interpelevation (XSCoordinate *c1, XSCoordinate *c2, double station)
  *
  * Returns: an interpolated coordinate
  */
-XSCoordinate *
+static XSCoordinate *
 xscoord_interpstation (XSCoordinate *c1, XSCoordinate *c2, double elevation)
 {
   g_assert (c1 && c2);
