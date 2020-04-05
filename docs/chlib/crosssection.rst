@@ -24,10 +24,14 @@ Cross section coordinates
     respectively. The returned cross section coordinate array is newly created
     and should be freed with :c:func:`chl_xscoords_free` when no longer in use.
 
+    If :c:data:`n` is greater than 0, :c:data:`station` and :c:data:`elevation`
+    must not be `NULL`. If :c:data:`n` is equal to 0, an empty
+    :c:type:`ChlXSCoords` is returned.
+
     :c:func:`chl_xscoords_new` sets :c:data:`error` to :c:data:`CHL_ERROR_ARG`
     and returns `NULL` if
 
-        - :c:data:`n` is less than 2,
+        - :c:data:`n` is less than 0,
         - :c:data:`station` is not in ascending order, or if
         - :c:data:`station` or :c:data:`elevation` contain non-finite values.
 
