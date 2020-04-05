@@ -21,6 +21,20 @@ test_xscoords_new (void)
 
   // one coordinate
   ca = chl_xscoords_new (1, station, elevation, &error);
+  g_assert_null (error);
+  g_assert_nonnull (ca);
+  chl_xscoords_free (ca);
+  ca = NULL;
+
+  // zero coordinates
+  ca = chl_xscoords_new (0, NULL, NULL, &error);
+  g_assert_null (error);
+  g_assert_nonnull (ca);
+  chl_xscoords_free (ca);
+  ca = NULL;
+
+  // negative n
+  ca = chl_xscoords_new (-1, NULL, NULL, &error);
   g_assert_null (ca);
   g_assert_nonnull (&error);
   g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));

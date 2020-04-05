@@ -154,21 +154,41 @@ struct ChlXSCoords
   XSCoordinate **coordinates;   /* array of coordinates */
 };
 
+static ChlXSCoords
+chl_xscoords_new_empty (void)
+{
+  ChlXSCoords a;
+  NEW (a);
+
+  a->length        = 0;
+  a->coordinates   = NULL;
+  a->max_elevation = -INFINITY;
+  a->min_elevation = INFINITY;
+
+  return a;
+}
+
 ChlXSCoords
 chl_xscoords_new (int n, double *station, double *elevation, GError **error)
 {
 
-  g_return_val_if_fail (station != NULL || elevation != NULL, NULL);
   g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
-  if (n < 2)
+  if (n < 0)
     {
       g_set_error (error,
                    CHL_ERROR,
                    CHL_ERROR_ARG,
-                   "n must be greater than or equal to 2");
+                   "n must be greater than or equal to 0");
       return NULL;
     }
+
+  ChlXSCoords a = chl_xscoords_new_empty ();
+
+  if (n == 0)
+    return a;
+
+  g_return_val_if_fail (station != NULL || elevation != NULL, NULL);
 
   // check that station points are in ascending order before allocating any
   // memory on the heap
@@ -182,6 +202,7 @@ chl_xscoords_new (int n, double *station, double *elevation, GError **error)
                            CHL_ERROR,
                            CHL_ERROR_ARG,
                            "station must be in ascending order");
+              chl_xscoords_free (a);
               return NULL;
             }
         }
@@ -191,17 +212,17 @@ chl_xscoords_new (int n, double *station, double *elevation, GError **error)
                        CHL_ERROR,
                        CHL_ERROR_ARG,
                        "station and elevation values must be finite");
+          chl_xscoords_free (a);
           return NULL;
         }
     }
 
-  double max_y = -INFINITY;
-  double min_y = INFINITY;
+  double max_y = a->max_elevation;
+  double min_y = a->min_elevation;
 
-  ChlXSCoords a;
-  NEW (a);
+  XSCoordinate **coords;
 
-  XSCoordinate **coords = chl_calloc (sizeof (XSCoordinate *), n);
+  coords = chl_calloc (n, sizeof (XSCoordinate *));
 
   for (int i = 0; i < n; i++)
     {
@@ -225,25 +246,31 @@ static ChlXSCoords
 chl_xscoords_from_array (int n, XSCoordinate **array)
 {
   g_assert (array);
-  g_assert (n > 2);
 
   XSCoordinate * c;
-  XSCoordinate **coordinates = chl_calloc (n, sizeof (XSCoordinate *));
-  double         max_elev    = -INFINITY;
-  double         min_elev    = INFINITY;
+  XSCoordinate **coordinates;
+  double         max_elev = -INFINITY;
+  double         min_elev = INFINITY;
 
-  for (int i = 0; i < n; i++)
+  if (n > 0)
     {
-      c                  = *(array + i);
-      *(coordinates + i) = c;
-      if (c)
+      coordinates = chl_calloc (n, sizeof (XSCoordinate *));
+
+      for (int i = 0; i < n; i++)
         {
-          if (c->elevation > max_elev)
-            max_elev = c->elevation;
-          if (c->elevation < min_elev)
-            min_elev = c->elevation;
+          c                  = *(array + i);
+          *(coordinates + i) = c;
+          if (c)
+            {
+              if (c->elevation > max_elev)
+                max_elev = c->elevation;
+              if (c->elevation < min_elev)
+                min_elev = c->elevation;
+            }
         }
     }
+  else
+    coordinates = NULL;
 
   ChlXSCoords a;
   NEW (a);
