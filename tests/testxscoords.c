@@ -138,9 +138,14 @@ test_xscoords_isempty (void)
 
   ChlXSCoords ca = chl_xscoords_new (n, station, elevation, &error);
   g_assert_null (error);
-
   g_assert_cmpint (chl_xscoords_isempty (ca), ==, 0);
+  chl_xscoords_free (ca);
+  ca = NULL;
 
+  ca = chl_xscoords_new (0, NULL, NULL, &error);
+  g_assert_null (error);
+  g_assert_nonnull (ca);
+  g_assert_cmpint (chl_xscoords_isempty (ca), ==, 1);
   chl_xscoords_free (ca);
 }
 
