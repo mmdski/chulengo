@@ -314,6 +314,24 @@ test_xscoords_sub_station_simple_error (void)
   g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
   g_clear_error (&error);
 
+  sa = chl_xscoords_sub_station (ca, 0, INFINITY, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
+  sa = chl_xscoords_sub_station (ca, -INFINITY, 1, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
+  sa = chl_xscoords_sub_station (ca, -INFINITY, INFINITY, &error);
+  g_assert_null (sa);
+  g_assert_nonnull (error);
+  g_assert_true (g_error_matches (error, CHL_ERROR, CHL_ERROR_ARG));
+  g_clear_error (&error);
+
   chl_xscoords_free (ca);
 }
 
