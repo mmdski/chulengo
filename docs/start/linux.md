@@ -18,7 +18,7 @@ $ sudo dnf install glib2-devel clang valgrind
 
 ### Install the required Python packages
 ```
-$ pip3 install --user requirements.txt
+$ pip3 install --user -r requirements.txt
 ```
 
 ## Build the documentation
