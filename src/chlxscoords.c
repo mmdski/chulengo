@@ -472,6 +472,15 @@ chl_xscoords_sub_station (ChlXSCoords a,
   g_return_val_if_fail (a != NULL, NULL);
   g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
+  if (!isfinite (left) || !isfinite (right))
+    {
+      g_set_error (error,
+                   CHL_ERROR,
+                   CHL_ERROR_ARG,
+                   "left and right must be finite values");
+      return NULL;
+    }
+
   int n = a->length;
 
   if (right <= left)
