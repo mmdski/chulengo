@@ -10,7 +10,27 @@ name = 'chulengo'
 version = '0.0'
 release = '0.0.1'
 
-setup_kwargs = {'cmdclass': {}}
+with open('README.md', 'r') as fh:
+    long_description = fh.read()
+
+setup_kwargs = {
+    'name': name,
+    'version': release,
+    'packages': ['chulengo'],
+    'url': 'https://github.com/mmdski/chulengo',
+    'classifiers': [
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Programming Language :: Python :: 3',
+        'Topic :: Scientific/Engineering :: Hydrology'
+    ],
+    'description': 'computational hydraulics',
+    'long_description': long_description,
+    'long_description_content_type': 'text/markdown',
+    'install_requires': ['numpy'],
+    'license': 'GPLv3',
+    'cmdclass': {}}
 
 if sphinx_imported:
     docs_source = 'docs/'
