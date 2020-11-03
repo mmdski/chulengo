@@ -11,8 +11,10 @@ chulengo docs
    :caption: Contents:
 
    Getting started <start/index>
+   conservation
+   shallow
+   fvmethod
    chlib (C API) <chlib/index>
-
 
 
 Indices and tables
