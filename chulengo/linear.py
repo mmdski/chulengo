@@ -44,6 +44,21 @@ class LinearMethod:
 
         return alpha
 
+    def _wave(self, alpha):
+
+        m = alpha.shape[0]
+        n = alpha.shape[1]
+
+        wave = np.empty((m, m, n))
+
+        for i in range(n):
+
+            for p in range(m):
+
+                wave[p, :, i] = alpha[p, i] * self._right_eig[:, p]
+
+        return wave
+
     def dt(self):
 
         return self._dt
@@ -79,6 +94,7 @@ class GodunovsMethod(LinearMethod):
         flux = np.empty((m, n_cells))
 
         alpha = self._alpha(q)
+        wave = self._wave(alpha)
 
         for i in range(n_cells):
 
@@ -88,13 +104,8 @@ class GodunovsMethod(LinearMethod):
             f_right = 0
 
             for p in range(m):
-                a_left = alpha[p, i_q - 1]
-                w_left = a_left*self._right_eig[:, p]
-                f_left += self._lambda_plus[p]*w_left
-
-                a_right = alpha[p, i_q]
-                w_right = a_right*self._right_eig[:, p]
-                f_right += self._lambda_minus[p]*w_right
+                f_left += self._lambda_plus[p]*wave[p, :, i_q - 1]
+                f_right += self._lambda_minus[p]*wave[p, :, i_q]
 
             flux[:, i] = (f_left + f_right)/self._dx
 
