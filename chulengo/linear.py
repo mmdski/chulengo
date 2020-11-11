@@ -2,9 +2,12 @@ import numpy as np
 from numpy.linalg import eig, inv
 
 
-class GodunovsMethod:
+class LinearMethod:
 
     def __init__(self, h0, u0, g, dx, clf=0.9):
+
+        if self.__class__ is LinearMethod:
+            raise NotImplementedError("This class is not implemented")
 
         c0 = np.sqrt(h0*g)
 
@@ -15,9 +18,6 @@ class GodunovsMethod:
         right_eig_2 = np.array([1, u0 + c0])  # right eigenvector 2
 
         self._dx = float(dx)
-
-        self._n_left_nodes = 1
-        self._n_right_nodes = 1
 
         self._dt = clf*dx/(max(np.abs([lambda_1, lambda_2])))
 
@@ -30,17 +30,40 @@ class GodunovsMethod:
     def dt(self):
         return self._dt
 
+    def flux(self, *args):
+
+        raise NotImplementedError
+
+    def n_ghost_nodes(self):
+
+        return self._n_left_nodes, self._n_right_nodes
+
+
+class GodunovsMethod(LinearMethod):
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        self._n_left_nodes = 1
+        self._n_right_nodes = 1
+
+    def _phi(self, *args):
+
+        return 0
+
     def flux(self, q):
 
         m = q.shape[0]
         n_cells = q.shape[1] - self._n_left_nodes - self._n_right_nodes
 
         flux = np.empty((m, n_cells))
+        dq = q[:, 1:] - q[:, :-1]
+        alpha = np.dot(self._left_eig, dq)
 
         for i in range(n_cells):
             i_q = i + self._n_left_nodes
-            dq_left = q[:, i_q] - q[:, i_q - 1]
-            dq_right = q[:, i_q + 1] - q[:, i_q]
+            dq_left = dq[:, i_q - 1]
+            dq_right = dq[:, i_q]
 
             f_left = 0
             f_right = 0
@@ -57,7 +80,3 @@ class GodunovsMethod:
             flux[:, i] = (f_left + f_right)/self._dx
 
         return flux
-
-    def n_ghost_nodes(self):
-
-        return self._n_left_nodes, self._n_right_nodes
