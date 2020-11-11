@@ -110,3 +110,116 @@ class GodunovsMethod(LinearMethod):
             flux[:, i] = (f_left + f_right)/self._dx
 
         return flux
+
+
+class MCMethod(LinearMethod):
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        self._lambda_abs = np.abs(self._lambda)
+        self._n_left_nodes = 2
+        self._n_right_nodes = 2
+
+    def _alpha_lim(self, alpha):
+
+        m = alpha.shape[0]
+        n = alpha.shape[1] - 2
+
+        theta = self._theta(alpha)
+        phi = self._phi(theta)
+
+        alpha_lim = np.empty((m, n))
+
+        for i in range(n):
+            for p in range(m):
+                alpha_lim[p, i] = alpha[p, i + 1]*phi[p, i]
+
+        return alpha_lim
+
+    def _lim_flux(self, alpha):
+
+        alpha_lim = self._alpha_lim(alpha)
+        m, n = alpha_lim.shape
+
+        wave_lim = self._wave(alpha_lim)
+
+        flux_lim = np.zeros((m, n))
+
+        dt = self._dt
+        dx = self._dx
+        abs_lambda = self._lambda_abs
+
+        for i in range(n):
+            for p in range(m):
+                flux_lim[:, i] += 0.5*abs_lambda[p] * \
+                    (1 - dt/dx*abs_lambda[p])*wave_lim[p, :, i]
+
+        return flux_lim
+
+    @staticmethod
+    def _phi(theta):
+
+        m, n = theta.shape
+        phi = np.empty_like(theta)
+
+        for i in range(n):
+            for p in range(m):
+                r = (1 + theta[p, i])/2
+                phi[p, i] = max(0, min(r, 2, 2*theta[p, i]))
+
+        return phi
+
+    def _theta(self, alpha):
+
+        m = alpha.shape[0]
+        n = alpha.shape[1] - 2
+
+        theta = np.zeros((m, n))
+
+        for i in range(n):
+
+            i_alpha = i + 1
+
+            for p in range(m):
+
+                if alpha[p, i_alpha] == 0:
+
+                    continue
+
+                if self._lambda[p] > 0:
+                    theta[p, i] = alpha[p, i_alpha - 1]/alpha[p, i_alpha]
+
+                elif self._lambda[p] < 0:
+                    theta[p, i] = alpha[p, i_alpha + 1]/alpha[p, i_alpha]
+
+        return theta
+
+    def flux(self, q):
+
+        m = q.shape[0]
+        total_cells = q.shape[1]
+        n_cells = total_cells - self._n_left_nodes - self._n_right_nodes
+
+        flux = np.empty((m, n_cells))
+
+        alpha = self._alpha(q)
+        wave = self._wave(alpha)
+
+        flux_lim = self._lim_flux(alpha)
+
+        for i in range(n_cells):
+
+            i_q = i + self._n_left_nodes
+
+            left = 0
+            right = 0
+
+            for p in range(m):
+                left += self._lambda_plus[p]*wave[p, :, i_q - 1]
+                right += self._lambda_minus[p]*wave[p, :, i_q]
+
+            flux[:, i] = (left + right)/self._dx - \
+                (flux_lim[:, i + 1] - flux_lim[:, i])/self._dx
+
+        return flux
