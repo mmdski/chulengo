@@ -27,7 +27,25 @@ class LinearMethod:
         self._right_eig = np.stack([right_eig_1, right_eig_2], axis=1)
         self._left_eig = inv(self._right_eig)
 
+    def _alpha(self, q):
+
+        m = q.shape[0]
+        total_cells = q.shape[1]
+
+        alpha = np.empty((m, total_cells - 1))
+
+        for i in range(1, total_cells):
+
+            dq = q[:, i] - q[:, i - 1]
+
+            for p in range(m):
+
+                alpha[p, i - 1] = np.dot(self._left_eig[p, :], dq)
+
+        return alpha
+
     def dt(self):
+
         return self._dt
 
     def flux(self, *args):
@@ -47,33 +65,34 @@ class GodunovsMethod(LinearMethod):
         self._n_left_nodes = 1
         self._n_right_nodes = 1
 
-    def _phi(self, *args):
+    @staticmethod
+    def _phi(*args, **kwargs):
 
         return 0
 
     def flux(self, q):
 
         m = q.shape[0]
-        n_cells = q.shape[1] - self._n_left_nodes - self._n_right_nodes
+        total_cells = q.shape[1]
+        n_cells = total_cells - self._n_left_nodes - self._n_right_nodes
 
         flux = np.empty((m, n_cells))
-        dq = q[:, 1:] - q[:, :-1]
-        alpha = np.dot(self._left_eig, dq)
+
+        alpha = self._alpha(q)
 
         for i in range(n_cells):
+
             i_q = i + self._n_left_nodes
-            dq_left = dq[:, i_q - 1]
-            dq_right = dq[:, i_q]
 
             f_left = 0
             f_right = 0
 
             for p in range(m):
-                a_left = np.dot(self._left_eig[p, :], dq_left)
+                a_left = alpha[p, i_q - 1]
                 w_left = a_left*self._right_eig[:, p]
                 f_left += self._lambda_plus[p]*w_left
 
-                a_right = np.dot(self._left_eig[p, :], dq_right)
+                a_right = alpha[p, i_q]
                 w_right = a_right*self._right_eig[:, p]
                 f_right += self._lambda_minus[p]*w_right
 
