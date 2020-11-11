@@ -72,7 +72,7 @@ class LinearMethod:
         return self._n_left_nodes, self._n_right_nodes
 
 
-class GodunovsMethod(LinearMethod):
+class UpwindMethod(LinearMethod):
 
     def __init__(self, *args, **kwargs):
 
