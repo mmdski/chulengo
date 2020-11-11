@@ -8,28 +8,24 @@ class GodunovsMethod:
 
         c0 = np.sqrt(h0*g)
 
-        A = np.array([[0, 1], [-u0**2+c0**2, 2*u0]])
+        lambda_1 = u0 - c0  # eigenvalue 1
+        right_eig_1 = np.array([1, u0 - c0])  # right eigenvector 1
 
-        w, v = eig(A)
+        lambda_2 = u0 + c0  # eigenvalue 2
+        right_eig_2 = np.array([1, u0 + c0])  # right eigenvector 2
 
-        lambda_plus = np.zeros_like(A)
-        lambda_minus = np.zeros_like(A)
-
-        for i, l in enumerate(w):
-            lambda_plus[i, i] = np.maximum(l, 0)
-            lambda_minus[i, i] = np.minimum(l, 0)
-
-        a_plus = np.matmul(v, np.matmul(lambda_plus, inv(v)))
-        a_minus = np.matmul(v, np.matmul(lambda_minus, inv(v)))
-
-        self._a_plus = a_plus
-        self._a_minus = a_minus
         self._dx = float(dx)
 
         self._n_left_nodes = 1
         self._n_right_nodes = 1
 
-        self._dt = clf*dx/np.abs(w).max()
+        self._dt = clf*dx/(max(np.abs([lambda_1, lambda_2])))
+
+        self._lambda = np.array([lambda_1, lambda_2])
+        self._lambda_plus = np.maximum(self._lambda, [0, 0])
+        self._lambda_minus = np.minimum(self._lambda, [0, 0])
+        self._right_eig = np.stack([right_eig_1, right_eig_2], axis=1)
+        self._left_eig = inv(self._right_eig)
 
     def dt(self):
         return self._dt
@@ -39,16 +35,26 @@ class GodunovsMethod:
         m = q.shape[0]
         n_cells = q.shape[1] - self._n_left_nodes - self._n_right_nodes
 
-        dq_left = np.empty((m, n_cells))
-        dq_right = np.empty((m, n_cells))
+        flux = np.empty((m, n_cells))
 
         for i in range(n_cells):
             i_q = i + self._n_left_nodes
-            dq_left[:, i] = q[:, i_q] - q[:, i_q - 1]
-            dq_right[:, i] = q[:, i_q + 1] - q[:, i_q]
+            dq_left = q[:, i_q] - q[:, i_q - 1]
+            dq_right = q[:, i_q + 1] - q[:, i_q]
 
-        flux = (np.dot(self._a_plus, dq_left) +
-                np.dot(self._a_minus, dq_right))/self._dx
+            f_left = 0
+            f_right = 0
+
+            for p in range(m):
+                a_left = np.dot(self._left_eig[p, :], dq_left)
+                w_left = a_left*self._right_eig[:, p]
+                f_left += self._lambda_plus[p]*w_left
+
+                a_right = np.dot(self._left_eig[p, :], dq_right)
+                w_right = a_right*self._right_eig[:, p]
+                f_right += self._lambda_minus[p]*w_right
+
+            flux[:, i] = (f_left + f_right)/self._dx
 
         return flux
 
