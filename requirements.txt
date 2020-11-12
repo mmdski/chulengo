@@ -4,7 +4,7 @@ matplotlib
 meson
 ninja
 notebook
-numpy
+numpy==1.19.3
 pylint
 recommonmark
 rstcheck

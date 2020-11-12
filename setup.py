@@ -28,7 +28,7 @@ setup_kwargs = {
     'description': 'computational hydraulics',
     'long_description': long_description,
     'long_description_content_type': 'text/markdown',
-    'install_requires': ['numpy'],
+    'install_requires': ['numpy==1.19.3', 'scipy'],
     'license': 'GPLv3',
     'cmdclass': {}}
 
