@@ -1,10 +1,14 @@
 autopep8
 gcovr; platform_system == 'Linux'
+matplotlib
 meson
 ninja
+notebook
+numpy==1.19.3
 pylint
 recommonmark
 rstcheck
+scipy
 sphinx
 sphinx-autobuild
 sphinx_rtd_theme
