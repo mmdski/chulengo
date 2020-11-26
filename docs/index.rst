@@ -13,6 +13,7 @@ chulengo docs
    Getting started <start/index>
    conservation
    shallow
+   kinematic
    fvmethod
    chlib (C API) <chlib/index>
 
