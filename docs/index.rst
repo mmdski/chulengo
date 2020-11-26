@@ -14,7 +14,7 @@ chulengo docs
    conservation
    shallow
    kinematic
-   fvmethod
+   fvm/fvm
    chlib (C API) <chlib/index>
 
 
