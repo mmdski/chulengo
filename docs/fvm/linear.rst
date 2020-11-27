@@ -2,6 +2,10 @@
 Linear systems
 ==============
 
+----------------
+Conservation law
+----------------
+
 A linear conservation law in differental form follows the form
 
 .. math:: q_t + Aq_x = 0
@@ -40,8 +44,9 @@ matrix, with :math:`m` being the number of elements in the vector :math:`q`.
 
 .. math:: R = \begin{bmatrix}r^1\vert r^2\vert\dotsc\vert r^m\end{bmatrix}
 
-Direct form
-===========
+-----------------
+Flux limited form
+-----------------
 
 .. math:: Q^{n+1}_i = Q_i -
     \frac{\Delta t}{\Delta x}\left(A^{+}\Delta Q_{i-1/2} + A^{-}\Delta Q_{i+1/2}\right) -
@@ -60,23 +65,9 @@ Direct form
 
 .. math:: \alpha^p_{i-1/2} = \ell^p\left(Q_i - Q_{i-1}\right)
 
---------------------
-Linear shallow water
---------------------
-
-.. math:: \ell^1 = \frac{1}{2c_0}\begin{bmatrix}u_0 + c_0 & -1\end{bmatrix}
-
-.. math:: \ell^2 = \frac{1}{2c_0}\begin{bmatrix}-u_0 + c_0 & 1\end{bmatrix}
-
 .. math:: Q_i - Q_{i-1} =
     \begin{bmatrix} q^1_i - q^2_{i-1} \\ q^2_i - q^2_{i-1} \end{bmatrix} =
     \begin{bmatrix} \Delta q^1_{i-1/2} \\ \Delta q^2_{i-1/2} \end{bmatrix}
-
-.. math:: \alpha^1_{i-1/2} =
-    \frac{\Delta q^1_{i-1/2}\left(u_0 + c_0\right) - \Delta q^2_{i-1/2}}{2c_0}
-
-.. math:: \alpha^2_{i-1/2} =
-    \frac{\Delta q^1_{i-1/2}\left(- u_0 + c_0\right) - \Delta q^2_{i-1/2}}{2c_0}
 
 .. math:: \mathscr{W}^p_{i-1/2} = \alpha^p_{i-1/2}r^p
 
@@ -91,22 +82,36 @@ Linear shallow water
         i + 1& \text{if $\lambda^p < 0$},
     \end{cases}
 
+Linear shallow water
+====================
+
+.. math:: \ell^1 = \frac{1}{2c_0}\begin{bmatrix}u_0 + c_0 & -1\end{bmatrix}
+
+.. math:: \ell^2 = \frac{1}{2c_0}\begin{bmatrix}-u_0 + c_0 & 1\end{bmatrix}
+
+.. math:: \alpha^1_{i-1/2} =
+    \frac{\Delta q^1_{i-1/2}\left(u_0 + c_0\right) - \Delta q^2_{i-1/2}}{2c_0}
+
+.. math:: \alpha^2_{i-1/2} =
+    \frac{\Delta q^1_{i-1/2}\left(- u_0 + c_0\right) - \Delta q^2_{i-1/2}}{2c_0}
+
+--------
 Limiters
-========
+--------
 
 Linear methods
---------------
+==============
 
 upwind
-++++++
+------
 
 .. math:: \phi\left(\theta\right) = 0
 
 High-resolution limiters
-------------------------
+========================
 
 Monotizonized central-difference limiter
-++++++++++++++++++++++++++++++++++++++++
+----------------------------------------
 
 MC limiter
 
