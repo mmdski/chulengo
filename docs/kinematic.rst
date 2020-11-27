@@ -12,4 +12,4 @@ Kinematic wave
 
 .. math:: f\left(h\right)' = \frac{3}{2}CS_0^{1/2}h^{1/2}
 
-.. math:: h_t + \left(CS^{1/2}_0h^{1/2}\right)h_x = 0
+.. math:: h_t + \left(\frac{3}{2}CS^{1/2}_0h^{1/2}\right)h_x = 0
