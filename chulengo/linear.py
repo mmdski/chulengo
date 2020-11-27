@@ -27,6 +27,9 @@ class LinearMethod:
         self._right_eig = np.stack([right_eig_1, right_eig_2], axis=1)
         self._left_eig = inv(self._right_eig)
 
+        self._n_left_node = None
+        self._n_right_node = None
+
     def _alpha(self, q):
 
         m = q.shape[0]
