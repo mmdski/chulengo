@@ -16,14 +16,12 @@ Scalar equation
     + \mathscr{A}^{-}\Delta Q_{i+1/2}\right) -
     \frac{\Delta t}{\Delta x}\left(\tilde{F}_{i+1/2}-\tilde{F}_{i-1/2}\right)
 
-.. math:: \mathscr{A}^+\Delta Q_{i-1/2} =
-    \sum^m_{p=1}\left(s_{1-1/2}\right)^+\mathscr{W}_{i-1/2}
+.. math:: \mathscr{A}^+\Delta Q_{i-1/2} = s_{1-1/2}^+\mathscr{W}_{i-1/2}
 
-.. math:: \mathscr{A}^-\Delta Q_{i-1/2} =
-    \sum^m_{p=1}\left(s_{1-1/2}\right)^-\mathscr{W}_{i-1/2}
+.. math:: \mathscr{A}^-\Delta Q_{i-1/2} = s_{1-1/2}^-\mathscr{W}_{i-1/2}
 
 .. math:: \tilde{F}_{i-1/2} =
-    \frac{1}{2}\sum^m_{p=1}\lvert s_{1-1/2}\rvert
+    \frac{1}{2}\lvert s_{1-1/2}\rvert
     \left(1 - \frac{\Delta t}{\Delta x}\lvert s_{1-1/2}\rvert\right)
     \tilde{\mathscr{W}}_{i-1/2}
 
