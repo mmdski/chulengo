@@ -11,7 +11,7 @@ class Array:
         self._lo_index = int(lo_index)
         self._hi_index = int(hi_index)
 
-        length = self._hi_index - self._lo_index
+        length = self._hi_index - self._lo_index + 1
 
         self._array = np.empty((length,), dtype=float)
 
@@ -45,6 +45,10 @@ class Array:
             raise ValueError("Index is out of bounds")
 
         return self._array[index - self._lo_index]
+
+    def max_abs(self):
+
+        return np.abs(self._array).max()
 
     def limits(self):
 
