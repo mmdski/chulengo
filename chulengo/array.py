@@ -42,7 +42,10 @@ class Array:
             raise TypeError("Index must be an int")
 
         if index > self._hi_index or index < self._lo_index:
-            raise ValueError("Index is out of bounds")
+            lo = self._lo_index
+            hi = self._hi_index
+            raise ValueError("Index {} is out of bounds for ".format(index) +
+                             "array with limits {}, {}".format(lo, hi))
 
         return self._array[index - self._lo_index]
 
@@ -60,6 +63,9 @@ class Array:
             raise TypeError("Index must be an int")
 
         if index > self._hi_index or index < self._lo_index:
-            raise ValueError("Index is out of bounds")
+            lo = self._lo_index
+            hi = self._hi_index
+            raise ValueError("Index {} is out of bounds for ".format(index) +
+                             "array with limits {}, {}".format(lo, hi))
 
         self._array[index - self._lo_index] = float(value)
