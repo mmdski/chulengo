@@ -5,21 +5,21 @@ class Array:
 
     def __init__(self, lo_index, hi_index):
 
-        if lo_index >= hi_index:
-            raise ValueError("lo_index must be less than hi_index")
-
-        self._lo_index = int(lo_index)
-        self._hi_index = int(hi_index)
+        self._lo_index = lo_index
+        self._hi_index = hi_index
 
         length = self._hi_index - self._lo_index + 1
 
-        self._array = np.empty((length,), dtype=float)
+        self._array = np.empty((length, ), dtype=float)
 
     def __len__(self):
 
         return len(self._array)
 
-    @classmethod
+    def array(self, lo_index, hi_index):
+        return self._array[lo_index - self._lo_index:hi_index - self._hi_index]
+
+    @ classmethod
     def empty_like(cls, other):
 
         res = cls.__new__(cls)
@@ -36,18 +36,15 @@ class Array:
 
         self._array = a.copy()
 
-    def get(self, index):
+    def get(self, i):
 
-        if not isinstance(index, int):
-            raise TypeError("Index must be an int")
-
-        if index > self._hi_index or index < self._lo_index:
+        if i > self._hi_index or i < self._lo_index:
             lo = self._lo_index
             hi = self._hi_index
-            raise ValueError("Index {} is out of bounds for ".format(index) +
+            raise ValueError("Index {} is out of bounds for ".format(i) +
                              "array with limits {}, {}".format(lo, hi))
 
-        return self._array[index - self._lo_index]
+        return self._array[i - self._lo_index]
 
     def max_abs(self):
 
@@ -57,15 +54,12 @@ class Array:
 
         return self._lo_index, self._hi_index
 
-    def set(self, index, value):
+    def set(self, i, value):
 
-        if not isinstance(index, int):
-            raise TypeError("Index must be an int")
-
-        if index > self._hi_index or index < self._lo_index:
+        if i > self._hi_index or i < self._lo_index:
             lo = self._lo_index
             hi = self._hi_index
-            raise ValueError("Index {} is out of bounds for ".format(index) +
+            raise ValueError("i-index {} is out of bounds for ".format(i) +
                              "array with limits {}, {}".format(lo, hi))
 
-        self._array[index - self._lo_index] = float(value)
+        self._array[i - self._lo_index] = value
