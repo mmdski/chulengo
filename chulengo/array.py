@@ -17,7 +17,8 @@ class Array:
         return len(self._array)
 
     def array(self, lo_index, hi_index):
-        return self._array[lo_index - self._lo_index:hi_index - self._hi_index]
+        s = slice(lo_index - self._lo_index, hi_index - self._hi_index)
+        return self._array[s].copy()
 
     @ classmethod
     def empty_like(cls, other):
