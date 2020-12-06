@@ -79,7 +79,7 @@ Flux limited form
 .. math:: \theta^p_{i-1/2} = \frac{\alpha^p_{I-1/2}}{\alpha^p_{i-1/2}}
     \text{  with } I = \begin{cases}
         i - 1& \text{if $\lambda^p > 0$}, \\
-        i + 1& \text{if $\lambda^p < 0$},
+        i + 1& \text{if $\lambda^p < 0$}
     \end{cases}
 
 Linear shallow water
@@ -94,26 +94,3 @@ Linear shallow water
 
 .. math:: \alpha^2_{i-1/2} =
     \frac{\Delta q^1_{i-1/2}\left(- u_0 + c_0\right) - \Delta q^2_{i-1/2}}{2c_0}
-
---------
-Limiters
---------
-
-Linear methods
-==============
-
-upwind
-------
-
-.. math:: \phi\left(\theta\right) = 0
-
-High-resolution limiters
-========================
-
-Monotizonized central-difference limiter
-----------------------------------------
-
-MC limiter
-
-.. math:: \phi\left(\theta\right) =
-    \max{\left(0, \min{\left(\frac{1 + \theta}{2}, 2, 2\theta\right)}\right)}

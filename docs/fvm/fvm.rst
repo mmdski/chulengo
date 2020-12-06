@@ -70,6 +70,7 @@ Wave propagation form
 
 .. toctree::
    :maxdepth: 2
-   
+
    linear
    nonlinear
+   limiters
