@@ -72,7 +72,7 @@ class ScalarNonLinear:
         h = Array(1 - n_ghost, n_cells + n_ghost)
 
         for i in range(n_cells):
-            h.set(i + n_ghost, h_0[i])
+            h.set(i + 1, h_0[i])
 
         return h
 
