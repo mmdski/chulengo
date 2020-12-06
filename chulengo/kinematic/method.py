@@ -7,6 +7,9 @@ class ScalarNonLinear:
 
     def __init__(self, manning, slope, dx):
 
+        if self.__class__ is ScalarNonLinear:
+            raise NotImplementedError
+
         self._manning = manning
         self._slope = slope
 
@@ -15,7 +18,7 @@ class ScalarNonLinear:
         self._f_const = 1/manning * np.sqrt(slope)
         self._f_prime_const = 5/3 * 1/manning * np.sqrt(slope)
 
-        self._n_ghost = 1
+        self._n_ghost = None
 
     def _f(self, h):
         return self._f_const * h**(5/3)
@@ -93,3 +96,11 @@ class ScalarNonLinear:
                 s.set(i - 1, (self._f(h_hi) - self._f(h_lo))/(h_hi - h_lo))
 
         return s
+
+
+class UpwindMethod(ScalarNonLinear):
+
+    def __init__(self, *args):
+
+        super().__init__(*args)
+        self._n_ghost = 1
