@@ -75,3 +75,4 @@ directory to `C:\bin`.
 
 [1]: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 [2]: https://github.com/GNOME/glib
+[3]: https://www.freedesktop.org/wiki/Software/pkg-config/
