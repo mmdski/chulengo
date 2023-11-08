@@ -1,0 +1,22 @@
+{
+  "editor.tabSize": 2,
+  "cmake.configureArgs": [
+    "-DTESTS=1",
+    "-DEXAMPLES=1"
+  ],
+  "cSpell.words": [
+    "BEAVCREK",
+    "fmemopen",
+    "rtol",
+    "Subsect"
+  ],
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "node_modules",
+    "vscode-extension",
+    ".git/objects",
+    ".vscode",
+    ".vscode-insiders",
+    "examples/ras/*"
+  ]
+}

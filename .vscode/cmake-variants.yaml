@@ -1,0 +1,21 @@
+buildType:
+  default: debug
+  choices:
+    debug:
+      short: Debug
+      long: Build with deubg information
+      buildType: Debug
+
+ASAN:
+  default: 'no'
+  choices:
+    yes:
+      short: ASAN
+      long: Build with sanitizers
+      settings:
+        ASAN: 1
+    no:
+      short: No ASAN
+      long: Do not build with sanitizers
+      settings:
+        ASAN: 0
