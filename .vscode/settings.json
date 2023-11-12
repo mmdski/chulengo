@@ -1,15 +1,10 @@
 {
   "editor.tabSize": 2,
-  "cmake.configureArgs": [
-    "-DTESTS=1",
-    "-DEXAMPLES=1"
-  ],
-  "cSpell.words": [
-    "BEAVCREK",
-    "fmemopen",
-    "rtol",
-    "Subsect"
-  ],
+  "files.associations": {
+    "*.h": "c"
+  },
+  "cmake.configureArgs": ["-DTESTS=1", "-DEXAMPLES=1"],
+  "cSpell.words": ["chlib", "chulengo", "Domanski", "dtype", "libchlib"],
   "cSpell.ignorePaths": [
     "package-lock.json",
     "node_modules",
