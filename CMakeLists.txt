@@ -48,8 +48,9 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(MSVC)
-  # /wd6326 is for "Potential comparison of a constant with another constant."
-  add_compile_options(/guard:cf /analyze /permissive- /W4 /WX /wd6326)
+  # /wd6326 "Potential comparison of a constant with another constant."
+  # /wd4200 "nonstandard extension used: zero-sized array in struct/union"
+  add_compile_options(/guard:cf /analyze /permissive- /W4 /WX /wd6326 /wd4200)
 
 else()
   add_compile_options(-Wall -Wextra -pedantic -Werror)
@@ -68,6 +69,10 @@ set(CH_SRCS
 )
 add_library(chlib ${CH_SRCS})
 target_include_directories(chlib PUBLIC "${CMAKE_SOURCE_DIR}/include")
+
+if(MSVC)
+  set_target_properties(chlib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
+endif()
 
 if(TESTS)
   add_executable(ch_xs_coords.test src/ch_xs_coords.test.cpp)

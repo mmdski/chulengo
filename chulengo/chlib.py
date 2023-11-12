@@ -1,8 +1,13 @@
 from ctypes import c_float, c_size_t, CDLL, POINTER, Structure
 import os
+import platform
 
 _file_path, _ = os.path.split(__file__)
-_chlib_path = os.path.join(_file_path, "..", "build", "libchlib.dylib")
+if platform.system() == "Windows":
+    _chlib_path = os.path.join(_file_path, "..", "build", "Debug", "chlib.dll")
+elif platform.system() == "Darwin":
+    _chlib_path = os.path.join(_file_path, "..", "build", "libchlib.dylib")
+
 _chlib = CDLL(_chlib_path)
 
 
@@ -48,9 +53,9 @@ ch_xs_coords_set.argtypes = [
     POINTER(c_float),
 ]
 
-ch_xs_coords_init = _chlib.ch_xs_coords_init
-ch_xs_coords_init.restype = None
-ch_xs_coords_init.argtypes = [
+ch_xs_coords_set_arr = _chlib.ch_xs_coords_set_arr
+ch_xs_coords_set_arr.restype = None
+ch_xs_coords_set_arr.argtypes = [
     POINTER(ChXSCoords),
     c_size_t,
     POINTER(c_float),
@@ -61,7 +66,7 @@ if __name__ == "__main__":
     import numpy as np
 
     xs_coords_ptr = ch_xs_coords_new(10)
-    ch_xs_coords_init(
+    ch_xs_coords_set_arr(
         xs_coords_ptr, 5, (c_float * 5)(1, 2, 3, 4, 5), (c_float * 5)(1, 0, 0, 0, 1)
     )
 
@@ -71,9 +76,6 @@ if __name__ == "__main__":
 
     station = np.empty((coords_length,), dtype=c_float)
     elevation = np.empty((coords_length,), dtype=c_float)
-
-    station = np.empty((15,), dtype=c_float)
-    elevation = np.empty((15,), dtype=c_float)
 
     c_float_p = POINTER(c_float)
 
