@@ -16,4 +16,20 @@ struct ChXSCoords
   ChXSCoordinate coords[];
 };
 
+static inline bool
+ch_xs_coords_validate (ChXSCoords *xs_coords_ptr)
+{
+
+  assert (xs_coords_ptr);
+
+  for (size_t i = 1; i < xs_coords_ptr->length; i++)
+    {
+      if (xs_coords_ptr->coords[i - 1].station >
+          xs_coords_ptr->coords[i].station)
+        return false;
+    }
+
+  return true;
+}
+
 #endif

@@ -4,7 +4,14 @@
     "*.h": "c"
   },
   "cmake.configureArgs": ["-DTESTS=1", "-DEXAMPLES=1"],
-  "cSpell.words": ["chlib", "chulengo", "Domanski", "dtype", "libchlib"],
+  "cSpell.words": [
+    "chlib",
+    "chulengo",
+    "Domanski",
+    "dtype",
+    "libchlib",
+    "ndim"
+  ],
   "cSpell.ignorePaths": [
     "package-lock.json",
     "node_modules",

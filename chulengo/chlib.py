@@ -11,56 +11,46 @@ elif platform.system() == "Darwin":
 _chlib = CDLL(_chlib_path)
 
 
+c_float_p = POINTER(c_float)
+
+
 class ChXSCoords(Structure):
     pass
 
 
+ChXSCoordsPtr = POINTER(ChXSCoords)
+
 ch_xs_coords_new = _chlib.ch_xs_coords_new
-ch_xs_coords_new.restype = POINTER(ChXSCoords)
+ch_xs_coords_new.restype = ChXSCoordsPtr
 ch_xs_coords_new.argtypes = [c_size_t]
 
 ch_xs_coords_free = _chlib.ch_xs_coords_free
 ch_xs_coords_free.restype = None
-ch_xs_coords_free.argtypes = [POINTER(ChXSCoords)]
+ch_xs_coords_free.argtypes = [ChXSCoordsPtr]
 
 ch_xs_coords_length = _chlib.ch_xs_coords_length
 ch_xs_coords_length.restype = c_size_t
-ch_xs_coords_length.argtypes = [POINTER(ChXSCoords)]
+ch_xs_coords_length.argtypes = [ChXSCoordsPtr]
 
 ch_xs_coords_get = _chlib.ch_xs_coords_get
 ch_xs_coords_get.restype = None
-ch_xs_coords_get.argtypes = [
-    POINTER(ChXSCoords),
-    c_size_t,
-    POINTER(c_float),
-    POINTER(c_float),
-]
+ch_xs_coords_get.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
 
 ch_xs_coords_get_arr = _chlib.ch_xs_coords_get_arr
 ch_xs_coords_get_arr.restype = None
-ch_xs_coords_get_arr.argtypes = [
-    POINTER(ChXSCoords),
-    POINTER(c_float),
-    POINTER(c_float),
-]
+ch_xs_coords_get_arr.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
 
 ch_xs_coords_set = _chlib.ch_xs_coords_get
-ch_xs_coords_set.restype = None
-ch_xs_coords_set.argtypes = [
-    POINTER(ChXSCoords),
-    c_size_t,
-    POINTER(c_float),
-    POINTER(c_float),
-]
+ch_xs_coords_set.restype = int
+ch_xs_coords_set.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
 
 ch_xs_coords_set_arr = _chlib.ch_xs_coords_set_arr
-ch_xs_coords_set_arr.restype = None
-ch_xs_coords_set_arr.argtypes = [
-    POINTER(ChXSCoords),
-    c_size_t,
-    POINTER(c_float),
-    POINTER(c_float),
-]
+ch_xs_coords_set_arr.restype = int
+ch_xs_coords_set_arr.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
+
+ch_xs_coords_push = _chlib.ch_xs_coords_push
+ch_xs_coords_push.restype = None
+ch_xs_coords_push.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
 
 if __name__ == "__main__":
     import numpy as np
@@ -72,12 +62,8 @@ if __name__ == "__main__":
 
     coords_length = ch_xs_coords_length(xs_coords_ptr)
 
-    print(ch_xs_coords_length(xs_coords_ptr))
-
     station = np.empty((coords_length,), dtype=c_float)
     elevation = np.empty((coords_length,), dtype=c_float)
-
-    c_float_p = POINTER(c_float)
 
     ch_xs_coords_get_arr(
         xs_coords_ptr,
