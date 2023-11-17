@@ -75,6 +75,9 @@ ch_xs_coords_realloc (ChXSCoords *xs_coords_ptr, size_t size)
   xs_coords_ptr       = new_xs_coords_ptr;
   xs_coords_ptr->size = size;
 
+  if (xs_coords_ptr->length > xs_coords_ptr->size)
+    xs_coords_ptr->length = size;
+
   return xs_coords_ptr;
 }
 
@@ -135,14 +138,16 @@ ch_xs_coords_set (ChXSCoords *xs_coords_ptr,
   xs_coords_ptr->coords[i].elevation = elevation;
 }
 
-void
+ChXSCoords *
 ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
                       size_t      length,
                       float      *station,
                       float      *elevation)
 {
   assert (xs_coords_ptr && station && elevation);
-  assert (length <= xs_coords_ptr->size);
+
+  if (length > xs_coords_ptr->size)
+    xs_coords_ptr = ch_xs_coords_realloc (xs_coords_ptr, length);
 
   xs_coords_ptr->length = length;
 
@@ -151,6 +156,8 @@ ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
       xs_coords_ptr->coords[i].station   = station[i];
       xs_coords_ptr->coords[i].elevation = elevation[i];
     }
+
+  return xs_coords_ptr;
 }
 
 ChXSCoords *
@@ -170,4 +177,74 @@ ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation)
   xs_coords_ptr->length                   = length + 1;
 
   return xs_coords_ptr;
+}
+
+static float
+ch_xs_coords_interp_elev (ChXSCoordinate left,
+                          ChXSCoordinate right,
+                          float          station)
+{
+  assert (left.station <= right.station);
+  return (right.elevation - left.elevation) / (right.station - left.station) *
+             (station - left.station) +
+         left.elevation;
+}
+
+ChXSCoords *
+ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
+{
+  assert (xs_coords_ptr);
+  assert (left < right);
+
+  assert (ch_xs_coords_validate (xs_coords_ptr));
+  size_t length = xs_coords_ptr->length;
+
+  if (right <= xs_coords_ptr->coords[0].station)
+    return NULL;
+
+  if (left > xs_coords_ptr->coords[length - 1].station)
+    return NULL;
+
+  if (left < xs_coords_ptr->coords[0].station)
+    left = xs_coords_ptr->coords[0].station;
+
+  if (right > xs_coords_ptr->coords[length - 1].station)
+    right = xs_coords_ptr->coords[length - 1].station;
+
+  size_t i_left, i_right;
+
+  for (size_t i = 0; i < xs_coords_ptr->length; i++)
+    {
+      i_left = i;
+      if (xs_coords_ptr->coords[i].station > left)
+        break;
+    }
+
+  for (size_t i = xs_coords_ptr->length - 1; i >= 0; i--)
+    {
+      i_right = i;
+      if (xs_coords_ptr->coords[i].station < right)
+        break;
+    }
+
+  assert (i_left <= i_right);
+  ChXSCoords *subsect_ptr = ch_xs_coords_new (i_right - i_left + 3);
+
+  float elevation;
+  elevation = ch_xs_coords_interp_elev (
+      xs_coords_ptr->coords[i_left - 1], xs_coords_ptr->coords[i_left], left);
+  subsect_ptr = ch_xs_coords_push (subsect_ptr, left, elevation);
+
+  for (size_t i = i_left; i <= i_right; i++)
+    {
+      subsect_ptr =
+          ch_xs_coords_push_coord (subsect_ptr, xs_coords_ptr->coords[i]);
+    }
+
+  elevation   = ch_xs_coords_interp_elev (xs_coords_ptr->coords[i_right],
+                                        xs_coords_ptr->coords[i_right + 1],
+                                        right);
+  subsect_ptr = ch_xs_coords_push (subsect_ptr, right, elevation);
+
+  return subsect_ptr;
 }

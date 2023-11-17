@@ -24,6 +24,10 @@ ch_xs_coords_new = _chlib.ch_xs_coords_new
 ch_xs_coords_new.restype = ChXSCoordsPtr
 ch_xs_coords_new.argtypes = [c_size_t]
 
+ch_xs_coords_copy = _chlib.ch_xs_coords_copy
+ch_xs_coords_copy.restype = ChXSCoordsPtr
+ch_xs_coords_copy.argtypes = [ChXSCoordsPtr]
+
 ch_xs_coords_free = _chlib.ch_xs_coords_free
 ch_xs_coords_free.restype = None
 ch_xs_coords_free.argtypes = [ChXSCoordsPtr]
@@ -41,16 +45,20 @@ ch_xs_coords_get_arr.restype = None
 ch_xs_coords_get_arr.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
 
 ch_xs_coords_set = _chlib.ch_xs_coords_get
-ch_xs_coords_set.restype = int
+ch_xs_coords_set.restype = None
 ch_xs_coords_set.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
 
 ch_xs_coords_set_arr = _chlib.ch_xs_coords_set_arr
-ch_xs_coords_set_arr.restype = int
+ch_xs_coords_set_arr.restype = ChXSCoordsPtr
 ch_xs_coords_set_arr.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
 
 ch_xs_coords_push = _chlib.ch_xs_coords_push
 ch_xs_coords_push.restype = None
 ch_xs_coords_push.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
+
+ch_xs_coords_subsect = _chlib.ch_xs_coords_subsect
+ch_xs_coords_subsect.restype = ChXSCoordsPtr
+ch_xs_coords_subsect.argtypes = [ChXSCoordsPtr, c_float, c_float]
 
 if __name__ == "__main__":
     import numpy as np
@@ -65,7 +73,7 @@ if __name__ == "__main__":
     station = np.empty((coords_length,), dtype=c_float)
     elevation = np.empty((coords_length,), dtype=c_float)
 
-    ch_xs_coords_get_arr(
+    xs_coords_ptr = ch_xs_coords_get_arr(
         xs_coords_ptr,
         station.ctypes.data_as(c_float_p),
         elevation.ctypes.data_as(c_float_p),

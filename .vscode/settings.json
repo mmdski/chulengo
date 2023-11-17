@@ -10,7 +10,12 @@
     "Domanski",
     "dtype",
     "libchlib",
-    "ndim"
+    "linestyle",
+    "markerfacecolor",
+    "ndim",
+    "subsect",
+    "xlabel",
+    "ylabel"
   ],
   "cSpell.ignorePaths": [
     "package-lock.json",

@@ -80,3 +80,7 @@ if(TESTS)
   gtest_add_tests(TARGET ch_xs_coords.test TEST_LIST ch_xs_coords.test-list)
   set_tests_properties(${ch_xs_coords.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 endif()
+
+if(EXAMPLES)
+  add_subdirectory(examples)
+endif()

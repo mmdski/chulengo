@@ -26,11 +26,13 @@ void        ch_xs_coords_set (ChXSCoords *xs_coords_ptr,
                               size_t      i,
                               float       station,
                               float       elevation);
-void        ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
+ChXSCoords *ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
                                   size_t      length,
                                   float      *station,
                                   float      *elevation);
 ChXSCoords *
 ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation);
+ChXSCoords *
+ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right);
 
 #endif
