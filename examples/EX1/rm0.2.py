@@ -19,8 +19,8 @@ xs_coords = XSCoordinates(station, elevation)
 
 ax = xs_coords.plot()
 
-left = 220
-right = 260
+left = 211
+right = 219
 
 subsect = xs_coords.subsection(left, right)
 

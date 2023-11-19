@@ -3,7 +3,6 @@
   "files.associations": {
     "*.h": "c"
   },
-  "cmake.configureArgs": ["-DTESTS=1", "-DEXAMPLES=1"],
   "cSpell.words": [
     "BEAVCREK",
     "chlib",

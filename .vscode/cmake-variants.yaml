@@ -3,11 +3,11 @@ buildType:
   choices:
     debug:
       short: Debug
-      long: Build with deubg information
+      long: Build with debug information
       buildType: Debug
 
 ASAN:
-  default: 'no'
+  default: "no"
   choices:
     yes:
       short: ASAN
@@ -19,3 +19,31 @@ ASAN:
       long: Do not build with sanitizers
       settings:
         ASAN: 0
+
+EXAMPLES:
+  default: "no"
+  choices:
+    yes:
+      short: Examples
+      long: Build examples
+      settings:
+        EXAMPLES: 1
+    no:
+      short: No examples
+      long: Do not build examples
+      settings:
+        EXAMPLES: 0
+
+TESTS:
+  default: "no"
+  choices:
+    yes:
+      short: Tests
+      long: Build tests
+      settings:
+        TESTS: 1
+    no:
+      short: No tests
+      long: Do not tests
+      settings:
+        TESTS: 0

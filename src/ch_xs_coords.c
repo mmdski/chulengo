@@ -223,16 +223,17 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
   if (right > xs_coords_ptr->coords[length - 1].station)
     right = xs_coords_ptr->coords[length - 1].station;
 
-  size_t i_left, i_right;
+  size_t i_left = 0, i_right = length - 1;
 
-  for (size_t i = 0; i < xs_coords_ptr->length; i++)
+  for (size_t i = 0; i < length; i++)
     {
       i_left = i;
       if (xs_coords_ptr->coords[i].station > left)
         break;
     }
 
-  for (size_t i = xs_coords_ptr->length - 1; i >= 0; i--)
+  // check for size_t overflow (i < length)
+  for (size_t i = length - 1; i < length; i--)
     {
       i_right = i;
       if (xs_coords_ptr->coords[i].station < right)
