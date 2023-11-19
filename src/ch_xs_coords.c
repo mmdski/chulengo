@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -190,6 +191,17 @@ ch_xs_coords_interp_elev (ChXSCoordinate left,
          left.elevation;
 }
 
+static float
+ch_xs_coords_interp_station (ChXSCoordinate left,
+                             ChXSCoordinate right,
+                             float          elevation)
+{
+  assert (left.station <= right.station);
+  return (right.station - left.station) / (right.elevation - left.elevation) *
+             (elevation - left.elevation) +
+         left.station;
+}
+
 ChXSCoords *
 ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
 {
@@ -227,7 +239,6 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
         break;
     }
 
-  assert (i_left <= i_right);
   ChXSCoords *subsect_ptr = ch_xs_coords_new (i_right - i_left + 3);
 
   float elevation;
@@ -247,4 +258,61 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
   subsect_ptr = ch_xs_coords_push (subsect_ptr, right, elevation);
 
   return subsect_ptr;
+}
+
+ChXSCoords *
+ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr, float wse)
+{
+  assert (xs_coords_ptr);
+  assert (ch_xs_coords_validate (xs_coords_ptr));
+
+  if (isnan (wse))
+    return NULL;
+
+  size_t      length            = xs_coords_ptr->length;
+  ChXSCoords *wetted_coords_ptr = ch_xs_coords_new_like (xs_coords_ptr);
+
+  float station;
+
+  for (size_t i = 0; i < length; i++)
+    {
+
+      // find coordinate that is below wse
+      while (i < length && xs_coords_ptr->coords[i].elevation > wse)
+        i++;
+
+      // leave the loop if there are no more coordinates
+      if (i == length)
+        break;
+      else if (i > 0 && wetted_coords_ptr->length > 0)
+        wetted_coords_ptr = ch_xs_coords_push (wetted_coords_ptr, NAN, NAN);
+
+      if (i != 0)
+        {
+          // push the interpolated coordinate
+          station = ch_xs_coords_interp_station (
+              xs_coords_ptr->coords[i - 1], xs_coords_ptr->coords[i], wse);
+          wetted_coords_ptr =
+              ch_xs_coords_push (wetted_coords_ptr, station, wse);
+        }
+
+      // push coordinates that are below wse
+      while (i < length && xs_coords_ptr->coords[i].elevation < wse)
+        {
+          wetted_coords_ptr = ch_xs_coords_push_coord (
+              wetted_coords_ptr, xs_coords_ptr->coords[i]);
+          i++;
+        }
+
+      if (i < length)
+        {
+          // push the interpolated coordinate
+          station = ch_xs_coords_interp_station (
+              xs_coords_ptr->coords[i - 1], xs_coords_ptr->coords[i], wse);
+          wetted_coords_ptr =
+              ch_xs_coords_push (wetted_coords_ptr, station, wse);
+        }
+    }
+
+  return wetted_coords_ptr;
 }

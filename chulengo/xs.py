@@ -97,3 +97,22 @@ class XSCoordinates:
             subsect._length = int(ch_xs_coords_length(xs_coords_subsect_ptr))
 
             return subsect
+
+    def wetted(self, wse: float) -> XSCoordinates:
+        wse_cf = c_float(wse)
+
+        wetted_ptr = ch_xs_coords_wetted(self._xs_coords_ptr, wse_cf)
+
+        if not wetted_ptr:
+            return None
+
+        wetted_length = ch_xs_coords_length(wetted_ptr)
+        if wetted_length == 0:
+            ch_xs_coords_free(wetted_ptr)
+            return None
+
+        wetted_coords = self.__new__(self.__class__)
+        wetted_coords._xs_coords_ptr = wetted_ptr
+        wetted_coords._length = wetted_length
+
+        return wetted_coords

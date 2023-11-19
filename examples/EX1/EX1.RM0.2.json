@@ -1,0 +1,13 @@
+{
+  "coordinates": {
+    "length": 8,
+    "station": [210, 220, 260, 265, 270, 275, 300, 310],
+    "elevation": [90, 82, 80, 70, 71, 81, 83, 91]
+  },
+  "roughness": {
+    "length": 3,
+    "station": [210, 260, 275],
+    "value": [0.07, 0.04, 0.07]
+  },
+  "bank_stations": [260, 275]
+}

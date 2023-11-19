@@ -1,0 +1,7 @@
+{
+  "coordinates": {
+    "length": 5,
+    "station": [0, 5, 10, 15, 20],
+    "elevation": [10, 0, 10, 0, 10]
+  }
+}

@@ -10,20 +10,20 @@ extern "C"
 namespace
 {
 
-TEST (ch_xs_coords, mem)
+TEST (ChXSCoords, mem)
 {
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (10);
   ch_xs_coords_free (xs_coords_ptr);
 }
 
-TEST (ch_xs_coords, length)
+TEST (ChXSCoords, length)
 {
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (50);
   ASSERT_EQ (ch_xs_coords_length (xs_coords_ptr), 0);
   ch_xs_coords_free (xs_coords_ptr);
 }
 
-TEST (ch_xs_coords, set_arr)
+TEST (ChXSCoords, set_arr)
 {
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (1);
 
@@ -48,7 +48,7 @@ TEST (ch_xs_coords, set_arr)
   ch_xs_coords_free (xs_coords_ptr);
 }
 
-TEST (ch_xs_coords, push)
+TEST (ChXSCoords, push)
 {
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (1);
 
@@ -74,7 +74,7 @@ TEST (ch_xs_coords, push)
   ch_xs_coords_free (xs_coords_ptr);
 }
 
-TEST (ch_xs_coords, subsect)
+TEST (ChXSCoords, subsect)
 {
   size_t length          = 8;
   float  station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
@@ -129,6 +129,52 @@ TEST (ch_xs_coords, subsect)
   ch_xs_coords_free (subsect_ptr);
 }
 
+TEST (ChXSCoords, wetted)
+{
+  size_t length          = 5;
+  float  station_arr[]   = { 0, 5, 10, 15, 20 };
+  float  elevation_arr[] = { 10, 0, 10, 0, 10 };
+
+  ChXSCoords *xs_coords_ptr = ch_xs_coords_new (length);
+  xs_coords_ptr =
+      ch_xs_coords_set_arr (xs_coords_ptr, length, station_arr, elevation_arr);
+
+  size_t wetted_length      = 7;
+  float  wetted_station[]   = { 2.5, 5, 7.5, NAN, 12.5, 15, 17.5 };
+  float  wetted_elevation[] = { 5, 0, 5, NAN, 5, 0, 5 };
+
+  float station, elevation;
+
+  float       wse               = 5;
+  ChXSCoords *wetted_coords_ptr = NULL;
+  wetted_coords_ptr             = ch_xs_coords_wetted (xs_coords_ptr, wse);
+
+  ASSERT_EQ (wetted_length, ch_xs_coords_length (wetted_coords_ptr));
+
+  for (size_t i = 0; i < wetted_length; i++)
+    {
+      ch_xs_coords_get (wetted_coords_ptr, i, &station, &elevation);
+      if (isnan (wetted_station[i]))
+        {
+          ASSERT_TRUE (isnan (station));
+          ASSERT_TRUE (isnan (elevation));
+        }
+      else
+        {
+          ASSERT_FLOAT_EQ (station, wetted_station[i]);
+          ASSERT_FLOAT_EQ (elevation, wetted_elevation[i]);
+        }
+    }
+
+  ch_xs_coords_free (wetted_coords_ptr);
+  wetted_coords_ptr = NULL;
+
+  wetted_coords_ptr = ch_xs_coords_wetted (xs_coords_ptr, -INFINITY);
+  ASSERT_EQ (ch_xs_coords_length (wetted_coords_ptr), 0);
+  ch_xs_coords_free (wetted_coords_ptr);
+
+  ch_xs_coords_free (xs_coords_ptr);
+}
 }
 
 int

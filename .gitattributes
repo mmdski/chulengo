@@ -1,1 +1,26 @@
 *.h linguist-language=C
+
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+
+## HEC-RAS files
+
+# boundary condition
+*.b[[:digit:]][[:digit:]] text eol=crlf
+
+# flow files
+*.f[[:digit:]][[:digit:]] text eol=crlf
+
+# plan
+*.p[[:digit:]][[:digit:]] text eol=crlf
+
+# project file
+*.prj text eol=crlf
+
+# geometry
+*.g[[:digit:]][[:digit:]] text eol=crlf
+
+# unsteady flow
+*.u[[:digit:]][[:digit:]] text eol=crlf

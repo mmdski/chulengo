@@ -34,5 +34,6 @@ ChXSCoords *
 ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation);
 ChXSCoords *
 ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right);
+ChXSCoords *ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr, float wse);
 
 #endif
