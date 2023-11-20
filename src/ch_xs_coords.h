@@ -5,8 +5,8 @@
 
 typedef struct
 {
-  float station;
-  float elevation;
+  double station;
+  double elevation;
 } ChXSCoordinate;
 
 struct ChXSCoords

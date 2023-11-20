@@ -1,4 +1,4 @@
-from ctypes import c_float, c_size_t, CDLL, POINTER, Structure
+from ctypes import c_double, c_size_t, CDLL, POINTER, Structure
 import os
 import platform
 
@@ -11,7 +11,7 @@ elif platform.system() == "Darwin":
 _chlib = CDLL(_chlib_path)
 
 
-c_float_p = POINTER(c_float)
+c_double_p = POINTER(c_double)
 
 
 class ChXSCoords(Structure):
@@ -38,49 +38,49 @@ ch_xs_coords_length.argtypes = [ChXSCoordsPtr]
 
 ch_xs_coords_get = _chlib.ch_xs_coords_get
 ch_xs_coords_get.restype = None
-ch_xs_coords_get.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
+ch_xs_coords_get.argtypes = [ChXSCoordsPtr, c_size_t, c_double_p, c_double_p]
 
 ch_xs_coords_get_arr = _chlib.ch_xs_coords_get_arr
 ch_xs_coords_get_arr.restype = None
-ch_xs_coords_get_arr.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
+ch_xs_coords_get_arr.argtypes = [ChXSCoordsPtr, c_double_p, c_double_p]
 
 ch_xs_coords_set = _chlib.ch_xs_coords_get
 ch_xs_coords_set.restype = None
-ch_xs_coords_set.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
+ch_xs_coords_set.argtypes = [ChXSCoordsPtr, c_size_t, c_double_p, c_double_p]
 
 ch_xs_coords_set_arr = _chlib.ch_xs_coords_set_arr
 ch_xs_coords_set_arr.restype = ChXSCoordsPtr
-ch_xs_coords_set_arr.argtypes = [ChXSCoordsPtr, c_size_t, c_float_p, c_float_p]
+ch_xs_coords_set_arr.argtypes = [ChXSCoordsPtr, c_size_t, c_double_p, c_double_p]
 
 ch_xs_coords_push = _chlib.ch_xs_coords_push
 ch_xs_coords_push.restype = ChXSCoordsPtr
-ch_xs_coords_push.argtypes = [ChXSCoordsPtr, c_float_p, c_float_p]
+ch_xs_coords_push.argtypes = [ChXSCoordsPtr, c_double_p, c_double_p]
 
 ch_xs_coords_subsect = _chlib.ch_xs_coords_subsect
 ch_xs_coords_subsect.restype = ChXSCoordsPtr
-ch_xs_coords_subsect.argtypes = [ChXSCoordsPtr, c_float, c_float]
+ch_xs_coords_subsect.argtypes = [ChXSCoordsPtr, c_double, c_double, ChXSCoordsPtr]
 
 ch_xs_coords_wetted = _chlib.ch_xs_coords_wetted
 ch_xs_coords_wetted.restype = ChXSCoordsPtr
-ch_xs_coords_wetted.argtypes = [ChXSCoordsPtr, c_float]
+ch_xs_coords_wetted.argtypes = [ChXSCoordsPtr, c_double, ChXSCoordsPtr]
 
 if __name__ == "__main__":
     import numpy as np
 
     xs_coords_ptr = ch_xs_coords_new(10)
     ch_xs_coords_set_arr(
-        xs_coords_ptr, 5, (c_float * 5)(1, 2, 3, 4, 5), (c_float * 5)(1, 0, 0, 0, 1)
+        xs_coords_ptr, 5, (c_double * 5)(1, 2, 3, 4, 5), (c_double * 5)(1, 0, 0, 0, 1)
     )
 
     coords_length = ch_xs_coords_length(xs_coords_ptr)
 
-    station = np.empty((coords_length,), dtype=c_float)
-    elevation = np.empty((coords_length,), dtype=c_float)
+    station = np.empty((coords_length,), dtype=c_double)
+    elevation = np.empty((coords_length,), dtype=c_double)
 
     ch_xs_coords_get_arr(
         xs_coords_ptr,
-        station.ctypes.data_as(c_float_p),
-        elevation.ctypes.data_as(c_float_p),
+        station.ctypes.data_as(c_double_p),
+        elevation.ctypes.data_as(c_double_p),
     )
 
     ch_xs_coords_free(xs_coords_ptr)

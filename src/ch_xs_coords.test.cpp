@@ -25,16 +25,14 @@ TEST (ChXSCoords, length)
 
 TEST (ChXSCoords, set_arr)
 {
-  ChXSCoords *xs_coords_ptr = ch_xs_coords_new (1);
-
-  float station, elevation;
+  double station, elevation;
 
   size_t length          = 8;
-  float  station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
-  float  elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
+  double station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
+  double elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
 
-  xs_coords_ptr =
-      ch_xs_coords_set_arr (xs_coords_ptr, length, station_arr, elevation_arr);
+  ChXSCoords *xs_coords_ptr =
+      ch_xs_coords_set_arr (NULL, length, station_arr, elevation_arr);
 
   ASSERT_EQ (ch_xs_coords_length (xs_coords_ptr), length);
 
@@ -52,11 +50,11 @@ TEST (ChXSCoords, push)
 {
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (1);
 
-  float station, elevation;
+  double station, elevation;
 
   size_t length          = 8;
-  float  station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
-  float  elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
+  double station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
+  double elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
 
   for (size_t i = 0; i < length; i++)
     {
@@ -77,8 +75,8 @@ TEST (ChXSCoords, push)
 TEST (ChXSCoords, subsect)
 {
   size_t length          = 8;
-  float  station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
-  float  elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
+  double station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
+  double elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
 
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (length);
 
@@ -86,12 +84,13 @@ TEST (ChXSCoords, subsect)
       ch_xs_coords_set_arr (xs_coords_ptr, 8, station_arr, elevation_arr);
 
   // left and right are outside of the stations of the array
-  ChXSCoords *subsect_ptr =
-      ch_xs_coords_subsect (xs_coords_ptr, -INFINITY, INFINITY);
+  ChXSCoords *subsect_ptr = NULL;
+  subsect_ptr =
+      ch_xs_coords_subsect (xs_coords_ptr, -INFINITY, INFINITY, subsect_ptr);
 
   ASSERT_TRUE (subsect_ptr);
 
-  float station, elevation;
+  double station, elevation;
 
   for (size_t i = 0; i < length; i++)
     {
@@ -100,24 +99,20 @@ TEST (ChXSCoords, subsect)
       ASSERT_EQ (elevation, elevation_arr[i]);
     }
 
-  ch_xs_coords_free (subsect_ptr);
-  subsect_ptr = NULL;
-
   // left and right are too far to the left
-  subsect_ptr = ch_xs_coords_subsect (xs_coords_ptr, 0, 10);
-  ASSERT_FALSE (subsect_ptr);
+  subsect_ptr = ch_xs_coords_subsect (xs_coords_ptr, 0, 10, subsect_ptr);
+  ASSERT_EQ (ch_xs_coords_length (subsect_ptr), 0);
 
   // left and right are too far to the right
-  subsect_ptr = ch_xs_coords_subsect (xs_coords_ptr, 350, 400);
-  ASSERT_FALSE (subsect_ptr);
+  subsect_ptr = ch_xs_coords_subsect (xs_coords_ptr, 350, 400, subsect_ptr);
+  ASSERT_EQ (ch_xs_coords_length (subsect_ptr), 0);
 
   // left and right are equal to stations and elevations in the array
   size_t i_left  = 2;
   size_t i_right = 5;
 
   subsect_ptr = ch_xs_coords_subsect (
-      xs_coords_ptr, station_arr[i_left], station_arr[i_right]);
-  ASSERT_TRUE (subsect_ptr);
+      xs_coords_ptr, station_arr[i_left], station_arr[i_right], subsect_ptr);
   for (size_t i = i_left; i <= i_right; i++)
     {
       ch_xs_coords_get (subsect_ptr, i - i_left, &station, &elevation);
@@ -125,29 +120,29 @@ TEST (ChXSCoords, subsect)
       ASSERT_EQ (elevation, elevation_arr[i]);
     }
 
-  ch_xs_coords_free (xs_coords_ptr);
   ch_xs_coords_free (subsect_ptr);
+  ch_xs_coords_free (xs_coords_ptr);
 }
 
 TEST (ChXSCoords, wetted)
 {
   size_t length          = 5;
-  float  station_arr[]   = { 0, 5, 10, 15, 20 };
-  float  elevation_arr[] = { 10, 0, 10, 0, 10 };
+  double station_arr[]   = { 0, 5, 10, 15, 20 };
+  double elevation_arr[] = { 10, 0, 10, 0, 10 };
 
-  ChXSCoords *xs_coords_ptr = ch_xs_coords_new (length);
-  xs_coords_ptr =
-      ch_xs_coords_set_arr (xs_coords_ptr, length, station_arr, elevation_arr);
+  ChXSCoords *xs_coords_ptr =
+      ch_xs_coords_set_arr (NULL, length, station_arr, elevation_arr);
 
   size_t wetted_length      = 7;
-  float  wetted_station[]   = { 2.5, 5, 7.5, NAN, 12.5, 15, 17.5 };
-  float  wetted_elevation[] = { 5, 0, 5, NAN, 5, 0, 5 };
+  double wetted_station[]   = { 2.5, 5, 7.5, NAN, 12.5, 15, 17.5 };
+  double wetted_elevation[] = { 5, 0, 5, NAN, 5, 0, 5 };
 
-  float station, elevation;
+  double station, elevation;
 
-  float       wse               = 5;
+  double      wse               = 5;
   ChXSCoords *wetted_coords_ptr = NULL;
-  wetted_coords_ptr             = ch_xs_coords_wetted (xs_coords_ptr, wse);
+  wetted_coords_ptr =
+      ch_xs_coords_wetted (xs_coords_ptr, wse, wetted_coords_ptr);
 
   ASSERT_EQ (wetted_length, ch_xs_coords_length (wetted_coords_ptr));
 
@@ -161,18 +156,16 @@ TEST (ChXSCoords, wetted)
         }
       else
         {
-          ASSERT_FLOAT_EQ (station, wetted_station[i]);
-          ASSERT_FLOAT_EQ (elevation, wetted_elevation[i]);
+          ASSERT_DOUBLE_EQ (station, wetted_station[i]);
+          ASSERT_DOUBLE_EQ (elevation, wetted_elevation[i]);
         }
     }
 
-  ch_xs_coords_free (wetted_coords_ptr);
-  wetted_coords_ptr = NULL;
-
-  wetted_coords_ptr = ch_xs_coords_wetted (xs_coords_ptr, -INFINITY);
+  wetted_coords_ptr =
+      ch_xs_coords_wetted (xs_coords_ptr, -INFINITY, wetted_coords_ptr);
   ASSERT_EQ (ch_xs_coords_length (wetted_coords_ptr), 0);
-  ch_xs_coords_free (wetted_coords_ptr);
 
+  ch_xs_coords_free (wetted_coords_ptr);
   ch_xs_coords_free (xs_coords_ptr);
 }
 }

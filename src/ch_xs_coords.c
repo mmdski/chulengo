@@ -100,8 +100,8 @@ ch_xs_coords_length (ChXSCoords *xs_coords_ptr)
 void
 ch_xs_coords_get (ChXSCoords *xs_coords_ptr,
                   size_t      i,
-                  float      *station,
-                  float      *elevation)
+                  double     *station,
+                  double     *elevation)
 {
   assert (xs_coords_ptr);
   assert (i < xs_coords_ptr->length);
@@ -112,8 +112,8 @@ ch_xs_coords_get (ChXSCoords *xs_coords_ptr,
 
 void
 ch_xs_coords_get_arr (ChXSCoords *xs_coords_ptr,
-                      float      *station,
-                      float      *elevation)
+                      double     *station,
+                      double     *elevation)
 {
   assert (xs_coords_ptr);
   assert (station && elevation);
@@ -128,8 +128,8 @@ ch_xs_coords_get_arr (ChXSCoords *xs_coords_ptr,
 void
 ch_xs_coords_set (ChXSCoords *xs_coords_ptr,
                   size_t      i,
-                  float       station,
-                  float       elevation)
+                  double      station,
+                  double      elevation)
 {
   assert (xs_coords_ptr);
   assert (i < xs_coords_ptr->length);
@@ -142,12 +142,14 @@ ch_xs_coords_set (ChXSCoords *xs_coords_ptr,
 ChXSCoords *
 ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
                       size_t      length,
-                      float      *station,
-                      float      *elevation)
+                      double     *station,
+                      double     *elevation)
 {
-  assert (xs_coords_ptr && station && elevation);
+  assert (station && elevation);
 
-  if (length > xs_coords_ptr->size)
+  if (!xs_coords_ptr)
+    xs_coords_ptr = ch_xs_coords_new (length);
+  else if (length > xs_coords_ptr->size)
     xs_coords_ptr = ch_xs_coords_realloc (xs_coords_ptr, length);
 
   xs_coords_ptr->length = length;
@@ -162,7 +164,7 @@ ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
 }
 
 ChXSCoords *
-ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation)
+ch_xs_coords_push (ChXSCoords *xs_coords_ptr, double station, double elevation)
 {
 
   assert (xs_coords_ptr);
@@ -180,10 +182,10 @@ ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation)
   return xs_coords_ptr;
 }
 
-static float
+static double
 ch_xs_coords_interp_elev (ChXSCoordinate left,
                           ChXSCoordinate right,
-                          float          station)
+                          double         station)
 {
   assert (left.station <= right.station);
   return (right.elevation - left.elevation) / (right.station - left.station) *
@@ -191,10 +193,10 @@ ch_xs_coords_interp_elev (ChXSCoordinate left,
          left.elevation;
 }
 
-static float
+static double
 ch_xs_coords_interp_station (ChXSCoordinate left,
                              ChXSCoordinate right,
-                             float          elevation)
+                             double         elevation)
 {
   assert (left.station <= right.station);
   return (right.station - left.station) / (right.elevation - left.elevation) *
@@ -203,7 +205,10 @@ ch_xs_coords_interp_station (ChXSCoordinate left,
 }
 
 ChXSCoords *
-ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
+ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr,
+                      double      left,
+                      double      right,
+                      ChXSCoords *subsect_ptr)
 {
   assert (xs_coords_ptr);
   assert (left < right);
@@ -211,11 +216,20 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
   assert (ch_xs_coords_validate (xs_coords_ptr));
   size_t length = xs_coords_ptr->length;
 
+  if (!subsect_ptr)
+    subsect_ptr = ch_xs_coords_new_like (xs_coords_ptr);
+
   if (right <= xs_coords_ptr->coords[0].station)
-    return NULL;
+    {
+      subsect_ptr->length = 0;
+      return subsect_ptr;
+    }
 
   if (left > xs_coords_ptr->coords[length - 1].station)
-    return NULL;
+    {
+      subsect_ptr->length = 0;
+      return subsect_ptr;
+    }
 
   if (left < xs_coords_ptr->coords[0].station)
     left = xs_coords_ptr->coords[0].station;
@@ -240,9 +254,7 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
         break;
     }
 
-  ChXSCoords *subsect_ptr = ch_xs_coords_new (i_right - i_left + 3);
-
-  float elevation;
+  double elevation;
   elevation = ch_xs_coords_interp_elev (
       xs_coords_ptr->coords[i_left - 1], xs_coords_ptr->coords[i_left], left);
   subsect_ptr = ch_xs_coords_push (subsect_ptr, left, elevation);
@@ -262,18 +274,20 @@ ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right)
 }
 
 ChXSCoords *
-ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr, float wse)
+ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr,
+                     double      wse,
+                     ChXSCoords *wetted_coords_ptr)
 {
   assert (xs_coords_ptr);
   assert (ch_xs_coords_validate (xs_coords_ptr));
 
-  if (isnan (wse))
-    return NULL;
+  size_t length = xs_coords_ptr->length;
+  if (!wetted_coords_ptr)
+    wetted_coords_ptr = ch_xs_coords_new_like (xs_coords_ptr);
 
-  size_t      length            = xs_coords_ptr->length;
-  ChXSCoords *wetted_coords_ptr = ch_xs_coords_new_like (xs_coords_ptr);
+  wetted_coords_ptr->length = 0;
 
-  float station;
+  double station;
 
   for (size_t i = 0; i < length; i++)
     {

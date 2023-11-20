@@ -17,23 +17,27 @@ void        ch_xs_coords_free (ChXSCoords *xs_coords_ptr);
 size_t      ch_xs_coords_length (ChXSCoords *xs_coords_ptr);
 void        ch_xs_coords_get (ChXSCoords *xs_coords_ptr,
                               size_t      i,
-                              float      *station,
-                              float      *elevation);
+                              double     *station,
+                              double     *elevation);
 void        ch_xs_coords_get_arr (ChXSCoords *xs_coords_ptr,
-                                  float      *station,
-                                  float      *elevation);
+                                  double     *station,
+                                  double     *elevation);
 void        ch_xs_coords_set (ChXSCoords *xs_coords_ptr,
                               size_t      i,
-                              float       station,
-                              float       elevation);
+                              double      station,
+                              double      elevation);
 ChXSCoords *ch_xs_coords_set_arr (ChXSCoords *xs_coords_ptr,
                                   size_t      length,
-                                  float      *station,
-                                  float      *elevation);
+                                  double     *station,
+                                  double     *elevation);
 ChXSCoords *
-ch_xs_coords_push (ChXSCoords *xs_coords_ptr, float station, float elevation);
-ChXSCoords *
-ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr, float left, float right);
-ChXSCoords *ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr, float wse);
+ch_xs_coords_push (ChXSCoords *xs_coords_ptr, double station, double elevation);
+ChXSCoords *ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr,
+                                  double      left,
+                                  double      right,
+                                  ChXSCoords *subsect_ptr);
+ChXSCoords *ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr,
+                                 double      wse,
+                                 ChXSCoords *wetted_ptr);
 
 #endif

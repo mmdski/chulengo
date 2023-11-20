@@ -1,4 +1,4 @@
-from setuptools import Command, setup
+from setuptools import setup
 
 name = "chulengo"
 
@@ -14,10 +14,9 @@ setup_kwargs = {
     "name": name,
     "version": release,
     "packages": ["chulengo"],
-    "url": "https://github.com/mmdski/chulengo",
     "license": "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "author": "Marian Domanski",
-    "author_email": "",
+    "author_email": "shrieks.walnut.0s@icloud.com",
     "description": "Hydraulics",
     "classifiers": [
         dev_status,
@@ -25,7 +24,9 @@ setup_kwargs = {
         "Programming Language :: Python :: 3",
         "Topic :: Scientific/Engineering :: Hydrology",
     ],
-    "python_requires": "~=3.11",
+    "project_urls": {"Source": "https://github.com/mmdski/chulengo"},
+    "install_requires": ["numpy"],
+    "python_requires": "~=3.12",
 }
 
 setup(**setup_kwargs)

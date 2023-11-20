@@ -8,21 +8,21 @@ main (void)
 {
 
   size_t length          = 8;
-  float  station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
-  float  elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
+  double station_arr[]   = { 210, 220, 260, 265, 270, 275, 300, 310 };
+  double elevation_arr[] = { 90, 82, 80, 70, 71, 81, 83, 91 };
 
   ChXSCoords *xs_coords_ptr = ch_xs_coords_new (length);
   xs_coords_ptr =
       ch_xs_coords_set_arr (xs_coords_ptr, length, station_arr, elevation_arr);
 
-  float station, elevation;
+  double station, elevation;
 
   ChXSCoords *subsect_ptr = NULL;
   ChXSCoords *wetted_ptr  = NULL;
 
-  float left  = 220;
-  float right = 260;
-  subsect_ptr = ch_xs_coords_subsect (xs_coords_ptr, left, right);
+  double left  = 220;
+  double right = 260;
+  subsect_ptr  = ch_xs_coords_subsect (xs_coords_ptr, left, right, subsect_ptr);
 
   if (!subsect_ptr)
     {
@@ -41,8 +41,8 @@ main (void)
       printf ("%15.2f,%15.2f\n", station, elevation);
     }
 
-  float wse  = 75;
-  wetted_ptr = ch_xs_coords_wetted (xs_coords_ptr, wse);
+  double wse = 75;
+  wetted_ptr = ch_xs_coords_wetted (xs_coords_ptr, wse, wetted_ptr);
 
   if (!wetted_ptr)
     {
