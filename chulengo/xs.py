@@ -59,21 +59,26 @@ class XSCoordinates:
 
         return station, elevation
 
-    def plot(self, ax=None, color="k", label="Ground"):
+    def plot(self, ax=None, **kwargs):
         if not ax:
             ax = plt.axes()
 
         station, elevation = self.coordinates()
 
-        ax.plot(
-            station,
-            elevation,
-            linestyle="-",
-            color=color,
-            marker=".",
-            markerfacecolor=color,
-            label=label,
-        )
+        default_kwargs = {
+            "linestyle": "-",
+            "linewidth": 0.5,
+            "color": "k",
+            "marker": "s",
+            "markersize": 3,
+            "markerfacecolor": "k",
+            "label": "Ground",
+        }
+
+        if kwargs:
+            default_kwargs.update(kwargs)
+
+        ax.plot(station, elevation, **default_kwargs)
         ax.legend()
         ax.set_xlabel("Station")
         ax.set_ylabel("Elevation")
