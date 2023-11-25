@@ -1,7 +1,9 @@
 #ifndef CH_XS_COORDS_H_
 #define CH_XS_COORDS_H_
 
-#include <chl.h>
+#include <assert.h>
+
+#include <chlib.h>
 
 typedef struct
 {
