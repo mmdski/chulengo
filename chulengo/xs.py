@@ -92,17 +92,17 @@ class XSCoordinates:
         left_cf = c_double(left)
         right_cf = c_double(right)
 
-        xs_coords_subsect_ptr = ch_xs_coords_subsect(
+        xs_coords_subdiv_ptr = ch_xs_coords_subsect(
             self._xs_coords_ptr, left_cf, right_cf, None
         )
 
-        if ch_xs_coords_length(xs_coords_subsect_ptr) == 0:
-            ch_xs_coords_free(xs_coords_subsect_ptr)
+        if ch_xs_coords_length(xs_coords_subdiv_ptr) == 0:
+            ch_xs_coords_free(xs_coords_subdiv_ptr)
             return None
 
         subsect = self.__new__(self.__class__)
-        subsect._xs_coords_ptr = xs_coords_subsect_ptr
-        subsect._length = int(ch_xs_coords_length(xs_coords_subsect_ptr))
+        subsect._xs_coords_ptr = xs_coords_subdiv_ptr
+        subsect._length = int(ch_xs_coords_length(xs_coords_subdiv_ptr))
 
         return subsect
 
@@ -123,7 +123,7 @@ class XSCoordinates:
         return wetted_coords
 
 
-class SubSection:
+class Subdivision:
     def __init__(
         self, roughness: float, station: Sequence[float], elevation: Sequence[float]
     ):
@@ -152,15 +152,15 @@ class SubSection:
             np_elevation.ctypes.data_as(c_double_p),
         )
 
-        self._subsect_ptr = ch_xs_subsect_new(c_double(roughness), xs_coords_ptr)
+        self._subdiv_ptr = ch_xs_subdiv_new(c_double(roughness), xs_coords_ptr)
 
     def __del__(self):
-        ch_xs_subsect_free(self._subsect_ptr)
+        ch_xs_subdiv_free(self._subdiv_ptr)
 
     def props(self, wse: float):
         props = np.empty((N_XS_PROPS,), dtype=c_double)
-        ch_xs_subsect_props(
-            self._subsect_ptr, c_double(wse), props.ctypes.data_as(c_double_p)
+        ch_xs_subdiv_props(
+            self._subdiv_ptr, c_double(wse), props.ctypes.data_as(c_double_p)
         )
 
         return props

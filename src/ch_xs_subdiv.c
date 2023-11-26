@@ -4,56 +4,56 @@
 #include <stdio.h>
 
 #include "ch_xs_coords.h"
-#include "ch_xs_subsect.h"
+#include "ch_xs_subdiv.h"
 
-ChXSSubSect *
-ch_xs_subsect_new (double roughness, ChXSCoords *coords_ptr)
+ChXSSubdiv *
+ch_xs_subdiv_new (double roughness, ChXSCoords *coords_ptr)
 {
   assert (roughness > 0 && isfinite (roughness));
   assert (coords_ptr);
   assert (ch_xs_coords_validate (coords_ptr));
 
-  errno                    = 0;
-  ChXSSubSect *subsect_ptr = malloc (sizeof (ChXSSubSect));
-  if (subsect_ptr == NULL || errno != 0)
+  errno                  = 0;
+  ChXSSubdiv *subdiv_ptr = malloc (sizeof (ChXSSubdiv));
+  if (subdiv_ptr == NULL || errno != 0)
     {
       perror ("malloc");
       exit (EXIT_FAILURE);
     }
 
-  subsect_ptr->roughness  = roughness;
-  subsect_ptr->coords     = coords_ptr;
-  subsect_ptr->wet_coords = NULL;
+  subdiv_ptr->roughness  = roughness;
+  subdiv_ptr->coords     = coords_ptr;
+  subdiv_ptr->wet_coords = NULL;
 
-  subsect_ptr->min_elevation = coords_ptr->coords[0].elevation;
+  subdiv_ptr->min_elevation = coords_ptr->coords[0].elevation;
 
   for (size_t i = 1; i < coords_ptr->length; i++)
     {
-      if (subsect_ptr->min_elevation > coords_ptr->coords[i].elevation)
-        subsect_ptr->min_elevation = coords_ptr->coords[i].elevation;
+      if (subdiv_ptr->min_elevation > coords_ptr->coords[i].elevation)
+        subdiv_ptr->min_elevation = coords_ptr->coords[i].elevation;
     }
 
-  return subsect_ptr;
+  return subdiv_ptr;
 }
 
 void
-ch_xs_subsect_free (ChXSSubSect *subsect_ptr)
+ch_xs_subdiv_free (ChXSSubdiv *subdiv_ptr)
 {
-  if (NULL == subsect_ptr)
+  if (NULL == subdiv_ptr)
     return;
 
-  ch_xs_coords_free (subsect_ptr->coords);
-  ch_xs_coords_free (subsect_ptr->wet_coords);
-  free (subsect_ptr);
+  ch_xs_coords_free (subdiv_ptr->coords);
+  ch_xs_coords_free (subdiv_ptr->wet_coords);
+  free (subdiv_ptr);
 }
 
 void
-ch_xs_subsect_props (ChXSSubSect *subsect_ptr, double wse, double *props)
+ch_xs_subdiv_props (ChXSSubdiv *subdiv_ptr, double wse, double *props)
 {
-  assert (subsect_ptr);
+  assert (subdiv_ptr);
   assert (props);
 
-  if (wse <= subsect_ptr->min_elevation)
+  if (wse <= subdiv_ptr->min_elevation)
     {
       props[kChXSWSE]        = wse;
       props[kChXSDepth]      = 0;
@@ -99,10 +99,10 @@ ch_xs_subsect_props (ChXSSubSect *subsect_ptr, double wse, double *props)
   double y2;
   double z2;
 
-  subsect_ptr->wet_coords =
-      ch_xs_coords_wetted (subsect_ptr->coords, wse, subsect_ptr->wet_coords);
+  subdiv_ptr->wet_coords =
+      ch_xs_coords_wetted (subdiv_ptr->coords, wse, subdiv_ptr->wet_coords);
 
-  ChXSCoords *wet_coords = subsect_ptr->wet_coords;
+  ChXSCoords *wet_coords = subdiv_ptr->wet_coords;
 
   for (size_t i = 1; i < wet_coords->length; i++)
     {
@@ -129,13 +129,13 @@ ch_xs_subsect_props (ChXSSubSect *subsect_ptr, double wse, double *props)
 
   hydraulic_radius       = area / perimeter;
   props[kChXSWSE]        = wse;
-  props[kChXSDepth]      = wse - subsect_ptr->min_elevation;
+  props[kChXSDepth]      = wse - subdiv_ptr->min_elevation;
   props[kChXSArea]       = area;
   props[kChXSTopWidth]   = top_width;
   props[kChXSWetPerim]   = perimeter;
   props[kChXSHydDepth]   = area / top_width;
   props[kChXSHydRadius]  = hydraulic_radius;
-  props[kChXSConveyance] = ch_const_mann_k () / subsect_ptr->roughness * area *
+  props[kChXSConveyance] = ch_const_mann_k () / subdiv_ptr->roughness * area *
                            pow (hydraulic_radius, 2.0 / 3.0);
   props[kChXSVelCoeff] = 1;
 }

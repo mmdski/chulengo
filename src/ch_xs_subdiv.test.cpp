@@ -10,7 +10,7 @@ extern "C"
 namespace
 {
 
-TEST (ChXSSubSect, mem)
+TEST (ChXSSubdiv, mem)
 {
   size_t      length          = 4;
   double      station_arr[]   = { 0, 0, 1, 1 };
@@ -18,13 +18,13 @@ TEST (ChXSSubSect, mem)
   ChXSCoords *coords_ptr =
       ch_xs_coords_set_arr (NULL, length, station_arr, elevation_arr);
 
-  ChXSSubSect *subsect_ptr = ch_xs_subsect_new (0.040, coords_ptr);
-  ASSERT_TRUE (subsect_ptr);
+  ChXSSubdiv *subdiv_ptr = ch_xs_subdiv_new (0.040, coords_ptr);
+  ASSERT_TRUE (subdiv_ptr);
 
-  ch_xs_subsect_free (subsect_ptr);
+  ch_xs_subdiv_free (subdiv_ptr);
 }
 
-TEST (ChXSSubSect, props)
+TEST (ChXSSubdiv, props)
 {
   size_t      length          = 4;
   double      station_arr[]   = { 0, 0, 1, 1 };
@@ -32,14 +32,14 @@ TEST (ChXSSubSect, props)
   ChXSCoords *coords_ptr =
       ch_xs_coords_set_arr (NULL, length, station_arr, elevation_arr);
 
-  ChXSSubSect *subsect_ptr = ch_xs_subsect_new (0.040, coords_ptr);
-  ASSERT_TRUE (subsect_ptr);
+  ChXSSubdiv *subdiv_ptr = ch_xs_subdiv_new (0.040, coords_ptr);
+  ASSERT_TRUE (subdiv_ptr);
 
   double props[kChXSNProps];
 
-  ch_xs_subsect_props (subsect_ptr, 0.1, props);
+  ch_xs_subdiv_props (subdiv_ptr, 0.1, props);
 
-  ch_xs_subsect_free (subsect_ptr);
+  ch_xs_subdiv_free (subdiv_ptr);
 }
 }
 

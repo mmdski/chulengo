@@ -14,14 +14,14 @@ main (void)
 
   ChXSCoords *coords_ptr =
       ch_xs_coords_set_arr (NULL, length, station_arr, elevation_arr);
-  ChXSSubSect *subsect_ptr = ch_xs_subsect_new (roughness, coords_ptr);
+  ChXSSubdiv *subdiv_ptr = ch_xs_subdiv_new (roughness, coords_ptr);
 
   for (size_t i = 0; i < 11; i++)
     {
-      ch_xs_subsect_props (subsect_ptr, (double) i, props);
+      ch_xs_subdiv_props (subdiv_ptr, (double) i, props);
       printf ("wse = %2lu, area = %8.2f\n", i, props[kChXSArea]);
     }
-  ch_xs_subsect_free (subsect_ptr);
+  ch_xs_subdiv_free (subdiv_ptr);
 
   return EXIT_SUCCESS;
 }

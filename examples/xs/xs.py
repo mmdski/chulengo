@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from chulengo.xs import XSCoordinates, SubSection
+from chulengo.xs import XSCoordinates, Subdivision
 
 file_path, _ = os.path.split(__file__)
 ex_file_path = os.path.join(file_path, "triangles.json")
@@ -22,14 +22,14 @@ ax = xs_coords.plot()
 wse = 5
 wetted_coords = xs_coords.wetted(wse)
 
-subsect = SubSection(0.04, station, elevation)
+subdiv = Subdivision(0.04, station, elevation)
 
 wse = np.linspace(0, 10, num=11)
 area = np.empty_like(wse)
 top_width = np.empty_like(wse)
 
 for i, e in enumerate(wse):
-    props = subsect.props(wse[i])
+    props = subdiv.props(wse[i])
     area[i] = props[2]
     top_width[i] = props[3]
 

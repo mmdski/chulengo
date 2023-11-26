@@ -66,7 +66,7 @@ endif()
 #
 set(CH_SRCS
   src/ch_xs_coords.c
-  src/ch_xs_subsect.c
+  src/ch_xs_subdiv.c
 )
 add_library(chlib ${CH_SRCS})
 target_include_directories(chlib PUBLIC "${CMAKE_SOURCE_DIR}/include")
@@ -81,10 +81,10 @@ if(TESTS)
   gtest_add_tests(TARGET ch_xs_coords.test TEST_LIST ch_xs_coords.test-list)
   set_tests_properties(${ch_xs_coords.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 
-  add_executable(ch_xs_subsect.test src/ch_xs_subsect.test.cpp)
-  target_link_libraries(ch_xs_subsect.test chlib GTest::gtest GTest::gtest_main)
-  gtest_add_tests(TARGET ch_xs_subsect.test TEST_LIST ch_xs_subsect.test-list)
-  set_tests_properties(${ch_xs_subsect.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
+  add_executable(ch_xs_subdiv.test src/ch_xs_subdiv.test.cpp)
+  target_link_libraries(ch_xs_subdiv.test chlib GTest::gtest GTest::gtest_main)
+  gtest_add_tests(TARGET ch_xs_subdiv.test TEST_LIST ch_xs_subdiv.test-list)
+  set_tests_properties(${ch_xs_subdiv.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 endif()
 
 if(EXAMPLES)
