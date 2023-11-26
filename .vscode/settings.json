@@ -16,8 +16,10 @@
     "markerfacecolor",
     "markersize",
     "ndim",
+    "Perim",
     "subsect",
     "xlabel",
+    "XSWSE",
     "ylabel"
   ],
   "cSpell.ignorePaths": [

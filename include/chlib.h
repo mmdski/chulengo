@@ -1,5 +1,5 @@
-#ifndef CHL_H_
-#define CHL_H_
+#ifndef CHLIB_H_
+#define CHLIB_H_
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -7,6 +7,22 @@
 #ifndef __STDC_LIB_EXT1__
 typedef int errno_t;
 #endif
+
+#define ch_const_mann_k() 1.486
+
+typedef enum
+{
+  kChXSWSE,
+  kChXSDepth,
+  kChXSArea,
+  kChXSTopWidth,
+  kChXSWetPerim,
+  kChXSHydDepth,
+  kChXSHydRadius,
+  kChXSConveyance,
+  kChXSVelCoeff,
+  kChXSNProps
+} ChXSProp;
 
 typedef struct ChXSCoords ChXSCoords;
 
@@ -39,5 +55,11 @@ ChXSCoords *ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr,
 ChXSCoords *ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr,
                                  double      wse,
                                  ChXSCoords *wetted_ptr);
+
+typedef struct ChXSSubSect ChXSSubSect;
+
+ChXSSubSect *ch_xs_subsect_new (double roughness, ChXSCoords *coords_ptr);
+void         ch_xs_subsect_free (ChXSSubSect *subsect_ptr);
+void ch_xs_subsect_props (ChXSSubSect *subsect_ptr, double wse, double *props);
 
 #endif

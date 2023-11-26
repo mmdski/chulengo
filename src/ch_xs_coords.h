@@ -2,6 +2,7 @@
 #define CH_XS_COORDS_H_
 
 #include <assert.h>
+#include <math.h>
 
 #include <chlib.h>
 
@@ -29,10 +30,17 @@ ch_xs_coords_validate (ChXSCoords *xs_coords_ptr)
   if (length < 2)
     return false;
 
-  for (size_t i = 1; i < length; i++)
+  for (size_t i = 0; i < length; i++)
     {
-      if (xs_coords_ptr->coords[i - 1].station >
-          xs_coords_ptr->coords[i].station)
+      if (i > 0)
+        {
+          if (xs_coords_ptr->coords[i - 1].station >
+              xs_coords_ptr->coords[i].station)
+            return false;
+        }
+
+      if (!(isfinite (xs_coords_ptr->coords[i].station) &&
+            isfinite (xs_coords_ptr->coords[i].elevation)))
         return false;
     }
 

@@ -13,6 +13,8 @@ _chlib = CDLL(_chlib_path)
 
 c_double_p = POINTER(c_double)
 
+N_XS_PROPS = 9
+
 
 class ChXSCoords(Structure):
     pass
@@ -63,6 +65,25 @@ ch_xs_coords_subsect.argtypes = [ChXSCoordsPtr, c_double, c_double, ChXSCoordsPt
 ch_xs_coords_wetted = _chlib.ch_xs_coords_wetted
 ch_xs_coords_wetted.restype = ChXSCoordsPtr
 ch_xs_coords_wetted.argtypes = [ChXSCoordsPtr, c_double, ChXSCoordsPtr]
+
+
+class ChXSSubSect(Structure):
+    pass
+
+
+ChXSSubSectPtr = POINTER(ChXSSubSect)
+
+ch_xs_subsect_new = _chlib.ch_xs_subsect_new
+ch_xs_subsect_new.restype = ChXSSubSectPtr
+ch_xs_subsect_new.argtypes = [c_double, ChXSCoordsPtr]
+
+ch_xs_subsect_free = _chlib.ch_xs_subsect_free
+ch_xs_subsect_free.restype = None
+ch_xs_subsect_free.argtypes = [ChXSSubSectPtr]
+
+ch_xs_subsect_props = _chlib.ch_xs_subsect_props
+ch_xs_subsect_props.restype = None
+ch_xs_subsect_props.argtypes = [ChXSSubSectPtr, c_double, c_double_p]
 
 if __name__ == "__main__":
     import numpy as np

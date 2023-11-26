@@ -121,3 +121,46 @@ class XSCoordinates:
         wetted_coords._length = wetted_length
 
         return wetted_coords
+
+
+class SubSection:
+    def __init__(
+        self, roughness: float, station: Sequence[float], elevation: Sequence[float]
+    ):
+        np_station = np.array(station, dtype=c_double)
+        np_elevation = np.array(elevation, dtype=c_double)
+
+        if np_station.ndim != 1 and np_elevation.ndim != 1:
+            raise ValueError("Station and elevation must be one-dimensional")
+
+        if np_station.shape != np_station.shape:
+            raise ValueError("The shapes of station and elevation must be equal")
+
+        if not np.all(np_station[:-1] <= np_station[1:]):
+            raise ValueError("Station values must be in ascending order")
+
+        length = np_station.shape[0]
+        if length <= 0:
+            raise ValueError(
+                "The lengths of station and elevation must be greater than zero"
+            )
+
+        xs_coords_ptr = ch_xs_coords_set_arr(
+            None,
+            length,
+            np_station.ctypes.data_as(c_double_p),
+            np_elevation.ctypes.data_as(c_double_p),
+        )
+
+        self._subsect_ptr = ch_xs_subsect_new(c_double(roughness), xs_coords_ptr)
+
+    def __del__(self):
+        ch_xs_subsect_free(self._subsect_ptr)
+
+    def props(self, wse: float):
+        props = np.empty((N_XS_PROPS,), dtype=c_double)
+        ch_xs_subsect_props(
+            self._subsect_ptr, c_double(wse), props.ctypes.data_as(c_double_p)
+        )
+
+        return props

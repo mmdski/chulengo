@@ -312,14 +312,14 @@ ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr,
         }
 
       // push coordinates that are below wse
-      while (i < length && xs_coords_ptr->coords[i].elevation < wse)
+      while (i < length && xs_coords_ptr->coords[i].elevation <= wse)
         {
           wetted_coords_ptr = ch_xs_coords_push_coord (
               wetted_coords_ptr, xs_coords_ptr->coords[i]);
           i++;
         }
 
-      if (i < length)
+      if (i > 0 && i < length)
         {
           // push the interpolated coordinate
           station = ch_xs_coords_interp_station (
