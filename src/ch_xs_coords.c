@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ch_xs_coords.h"
+#include "ch_xs.h"
 
 ChXSCoords *
 ch_xs_coords_new (size_t size)

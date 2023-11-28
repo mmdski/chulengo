@@ -5,9 +5,7 @@
 #include <chlib.h>
 
 #include "ch_arr_dbl.h"
-#include "ch_xs_coords.h"
-#include "ch_xs_subdiv.h"
-#include "ch_xs_subsect.h"
+#include "ch_xs.h"
 
 ChXSSubSect *
 ch_xs_subsect_new (ChXSCoords *coords_ptr,

@@ -3,8 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "ch_xs_coords.h"
-#include "ch_xs_subdiv.h"
+#include "ch_xs.h"
 
 ChXSSubdiv *
 ch_xs_subdiv_new (double roughness, ChXSCoords *coords_ptr)

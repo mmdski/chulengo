@@ -1,5 +1,5 @@
-#ifndef CH_XS_COORDS_H_
-#define CH_XS_COORDS_H_
+#ifndef CH_XS_H_
+#define CH_XS_H_
 
 #include <assert.h>
 #include <math.h>
@@ -59,5 +59,20 @@ ch_xs_coords_push_coord (ChXSCoords *xs_coords_ptr, ChXSCoordinate coordinate)
   return ch_xs_coords_push (
       xs_coords_ptr, coordinate.station, coordinate.elevation);
 }
+
+struct ChXSSubdiv
+{
+  double      roughness;
+  double      min_elevation;
+  ChXSCoords *coords;
+  ChXSCoords *wet_coords;
+};
+
+struct ChXSSubSect
+{
+  bool         main_channel;
+  size_t       n_subdivs;
+  ChXSSubdiv **subdivs;
+};
 
 #endif
