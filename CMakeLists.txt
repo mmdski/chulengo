@@ -67,6 +67,7 @@ endif()
 set(CH_SRCS
   src/ch_xs_coords.c
   src/ch_xs_subdiv.c
+  src/ch_xs_subsect.c
 )
 add_library(chlib ${CH_SRCS})
 target_include_directories(chlib PUBLIC "${CMAKE_SOURCE_DIR}/include")

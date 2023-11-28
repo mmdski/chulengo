@@ -51,7 +51,7 @@ ch_xs_coords_push (ChXSCoords *xs_coords_ptr, double station, double elevation);
 ChXSCoords *ch_xs_coords_subsect (ChXSCoords *xs_coords_ptr,
                                   double      left,
                                   double      right,
-                                  ChXSCoords *subdiv_ptr);
+                                  ChXSCoords *subsect_ptr);
 ChXSCoords *ch_xs_coords_wetted (ChXSCoords *xs_coords_ptr,
                                  double      wse,
                                  ChXSCoords *wetted_ptr);
@@ -61,5 +61,14 @@ typedef struct ChXSSubdiv ChXSSubdiv;
 ChXSSubdiv *ch_xs_subdiv_new (double roughness, ChXSCoords *coords_ptr);
 void        ch_xs_subdiv_free (ChXSSubdiv *subdiv_ptr);
 void ch_xs_subdiv_props (ChXSSubdiv *subdiv_ptr, double wse, double *props);
+
+typedef struct ChXSSubSect ChXSSubSect;
+
+ChXSSubSect *ch_xs_subsect_new (ChXSCoords *coords_ptr,
+                                size_t      n_roughness,
+                                double     *roughness,
+                                double     *roughness_sta,
+                                bool        main_channel);
+void         ch_xs_subsect_free (ChXSSubSect *subsect_ptr);
 
 #endif
