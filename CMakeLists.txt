@@ -66,6 +66,7 @@ endif()
 #
 set(CH_SRCS
   src/ch_xs_coords.c
+  src/ch_xs_def.c
   src/ch_xs_subdiv.c
   src/ch_xs_subsect.c
 )
@@ -86,6 +87,11 @@ if(TESTS)
   target_link_libraries(ch_xs_subdiv.test chlib GTest::gtest GTest::gtest_main)
   gtest_add_tests(TARGET ch_xs_subdiv.test TEST_LIST ch_xs_subdiv.test-list)
   set_tests_properties(${ch_xs_subdiv.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
+
+  add_executable(ch_xs_def.test src/ch_xs_def.test.cpp)
+  target_link_libraries(ch_xs_def.test chlib GTest::gtest GTest::gtest_main)
+  gtest_add_tests(TARGET ch_xs_def.test TEST_LIST ch_xs_def.test-list)
+  set_tests_properties(${ch_xs_def.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 endif()
 
 if(EXAMPLES)

@@ -22,7 +22,7 @@ typedef enum
   kChXSConveyance,
   kChXSVelCoeff,
   kChXSNProps
-} ChXSProp;
+} ChXSHydraulicProps;
 
 typedef struct ChXSCoords ChXSCoords;
 
@@ -70,5 +70,19 @@ ChXSSubSect *ch_xs_subsect_new (ChXSCoords *coords_ptr,
                                 double     *roughness_sta,
                                 bool        main_channel);
 void         ch_xs_subsect_free (ChXSSubSect *subsect_ptr);
+
+typedef struct ChXSDef ChXSDef;
+
+ChXSDef *ch_xs_def_new (void);
+void     ch_xs_def_free (ChXSDef *xs_def_ptr);
+void     ch_xs_def_set_coordinates (ChXSDef *xs_def_ptr,
+                                    size_t   n_coords,
+                                    double  *station,
+                                    double  *elevation);
+void     ch_xs_def_set_roughness (ChXSDef *xs_def_ptr,
+                                  size_t   n_roughness,
+                                  double  *roughness,
+                                  double  *roughness_sta);
+void     ch_xs_def_set_banks (ChXSDef *xs_def_ptr, double left, double right);
 
 #endif

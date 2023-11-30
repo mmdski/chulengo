@@ -75,4 +75,17 @@ struct ChXSSubSect
   ChXSSubdiv **subdivs;
 };
 
+struct ChXSDef
+{
+  size_t  n_coordinates;
+  double *station;
+  double *elevation;
+
+  size_t  n_roughness;
+  double *roughness;
+  double *roughness_station;
+
+  double bank_stations[2];
+};
+
 #endif
