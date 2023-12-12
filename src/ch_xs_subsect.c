@@ -71,6 +71,11 @@ ch_xs_subsect_new (ChXSCoords *coords_ptr,
   subsect_ptr->n_subdivs    = n_subdivs;
 
   subsect_ptr->subdivs = malloc (n_subdivs * sizeof (ChXSSubdiv *));
+  if (NULL == subsect_ptr->subdivs || errno != 0)
+    {
+      perror ("malloc");
+      exit (EXIT_FAILURE);
+    }
 
   ChXSCoords *subdiv_coords_ptr;
   ChXSSubdiv *subdiv_ptr;

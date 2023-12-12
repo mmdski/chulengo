@@ -11,6 +11,11 @@ ch_xs_def_new (void)
 {
   errno               = 0;
   ChXSDef *xs_def_ptr = malloc (sizeof (ChXSDef));
+  if (NULL == xs_def_ptr || errno != 0)
+    {
+      perror ("malloc");
+      exit (EXIT_FAILURE);
+    }
 
   xs_def_ptr->n_coordinates = 0;
   xs_def_ptr->station       = NULL;
@@ -65,12 +70,14 @@ ch_xs_def_set_coordinates (ChXSDef *xs_def_ptr,
     }
   else if (xs_def_ptr->n_coordinates < n_coords)
     {
-      double *new_station = realloc (xs_def_ptr->station, n_coords);
+      double *new_station =
+          realloc (xs_def_ptr->station, n_coords * sizeof (double));
       if (NULL == new_station || errno != 0)
         goto realloc_fail;
       xs_def_ptr->station = new_station;
 
-      double *new_elevation = realloc (xs_def_ptr->elevation, n_coords);
+      double *new_elevation =
+          realloc (xs_def_ptr->elevation, n_coords * sizeof (double));
       if (NULL == new_elevation || errno != 0)
         goto realloc_fail;
       xs_def_ptr->elevation = new_elevation;
@@ -123,13 +130,14 @@ ch_xs_def_set_roughness (ChXSDef *xs_def_ptr,
     }
   else if (xs_def_ptr->n_roughness < n_roughness)
     {
-      double *new_roughness = realloc (xs_def_ptr->roughness, n_roughness);
+      double *new_roughness =
+          realloc (xs_def_ptr->roughness, n_roughness * sizeof (double));
       if (NULL == new_roughness || errno != 0)
         goto realloc_fail;
       xs_def_ptr->roughness = new_roughness;
 
-      double *new_roughness_sta =
-          realloc (xs_def_ptr->roughness_station, n_roughness);
+      double *new_roughness_sta = realloc (xs_def_ptr->roughness_station,
+                                           n_roughness * sizeof (double));
       if (NULL == new_roughness_sta || errno != 0)
         goto realloc_fail;
       xs_def_ptr->roughness_station = new_roughness_sta;

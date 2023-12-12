@@ -45,7 +45,7 @@ ch_arr_dbl_realloc (ChArrDbl *arr_ptr, size_t size)
   errno = 0;
   ChArrDbl *new_arr_ptr =
       realloc (arr_ptr, sizeof (ChArrDbl) + size * sizeof (double));
-  if (NULL == arr_ptr || errno != 0)
+  if (NULL == new_arr_ptr || errno != 0)
     {
       perror ("realloc");
       exit (EXIT_FAILURE);
