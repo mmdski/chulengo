@@ -9,7 +9,7 @@ import numpy as np
 from chulengo.chlib import *
 
 
-class XSCoordinates:
+class Coordinates:
     def __init__(self, station: Sequence[float], elevation: Sequence[float]):
         np_station = np.array(station, dtype=c_double)
         np_elevation = np.array(elevation, dtype=c_double)
@@ -85,7 +85,7 @@ class XSCoordinates:
 
         return ax
 
-    def subsection(self, left: float, right: float) -> XSCoordinates:
+    def subsection(self, left: float, right: float) -> Coordinates:
         if left >= right:
             raise ValueError("right must be greater than left")
 
@@ -106,7 +106,7 @@ class XSCoordinates:
 
         return subsect
 
-    def wetted(self, wse: float) -> XSCoordinates:
+    def wetted(self, wse: float) -> Coordinates:
         wse_cf = c_double(wse)
 
         wetted_ptr = ch_xs_coords_wetted(self._xs_coords_ptr, wse_cf, None)
