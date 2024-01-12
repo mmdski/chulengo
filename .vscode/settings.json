@@ -1,5 +1,5 @@
 {
-  "editor.tabSize": 2,
+  "editor.tabSize": 4,
   "files.associations": {
     "*.h": "c"
   },
@@ -7,9 +7,11 @@
     "BEAVCREK",
     "chlib",
     "chulengo",
+    "coeff",
     "CRITCREK",
     "Domanski",
     "dtype",
+    "ineff",
     "libchlib",
     "linestyle",
     "linewidth",
@@ -32,5 +34,8 @@
     ".vscode",
     ".vscode-insiders",
     "examples/ras/*"
-  ]
+  ],
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.codeAnalysis.clangTidy.config": "${workspaceFolder}/.clang-tidy",
+  "C_Cpp.codeAnalysis.runAutomatically": true
 }
