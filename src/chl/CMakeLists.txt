@@ -13,19 +13,25 @@ target_sources(chl
     chl.h
 )
 
+if(SCIKIT_BUILD)
+    set_target_properties(chl PROPERTIES OUTPUT_NAME "chl.pymem")
+    target_link_libraries(chl PRIVATE Python::Python)
+    install(TARGETS chl DESTINATION ${SKBUILD_PROJECT_NAME})
+endif()
+
 if(BUILD_TESTS)
     add_executable(ch_xs_coords.test ch_xs_coords.test.cpp)
-    target_link_libraries(ch_xs_coords.test chl GTest::gtest GTest::gtest_main)
+    target_link_libraries(ch_xs_coords.test chl GTest::gtest_main)
     gtest_add_tests(TARGET ch_xs_coords.test TEST_LIST ch_xs_coords.test-list)
     set_tests_properties(${ch_xs_coords.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 
     add_executable(ch_xs_subdiv.test ch_xs_subdiv.test.cpp)
-    target_link_libraries(ch_xs_subdiv.test chl GTest::gtest GTest::gtest_main)
+    target_link_libraries(ch_xs_subdiv.test chl GTest::gtest_main)
     gtest_add_tests(TARGET ch_xs_subdiv.test TEST_LIST ch_xs_subdiv.test-list)
     set_tests_properties(${ch_xs_subdiv.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 
     add_executable(ch_xs_def.test ch_xs_def.test.cpp)
-    target_link_libraries(ch_xs_def.test chl GTest::gtest GTest::gtest_main)
+    target_link_libraries(ch_xs_def.test chl GTest::gtest_main)
     gtest_add_tests(TARGET ch_xs_def.test TEST_LIST ch_xs_def.test-list)
     set_tests_properties(${ch_xs_def.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
 endif()

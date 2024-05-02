@@ -1,8 +1,17 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(chlib)
+if(SCIKIT_BUILD)
+    project(${SKBUILD_PROJECT_NAME} LANGUAGES C CXX)
+else()
+    project(chl LANGUAGES C CXX)
+endif()
 
-include(cmake/Sanitizers.cmake)
+option(BUILD_TESTS "Build tests" NO)
+
+if(PROJECT_IS_TOP_LEVEL)
+    include(cmake/Sanitizers.cmake)
+endif()
+
 include(FetchContent)
 
 if(BUILD_TESTS)
@@ -34,6 +43,11 @@ else()
         add_compile_options(--coverage)
         add_link_options(--coverage)
     endif()
+endif()
+
+if(SCIKIT_BUILD)
+    find_package(Python COMPONENTS Development REQUIRED)
+    add_compile_definitions(PY_BUILD)
 endif()
 
 #
