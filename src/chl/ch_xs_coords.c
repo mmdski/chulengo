@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ch_mem.h"
 #include "ch_xs.h"
 
 ChXSCoords *
@@ -13,7 +14,7 @@ ch_xs_coords_new (size_t size)
 
   errno = 0;
   ChXSCoords *xs_coords_ptr =
-      malloc (sizeof (ChXSCoords) + sizeof (ChXSCoordinate) * size);
+      ch_malloc (sizeof (ChXSCoords) + sizeof (ChXSCoordinate) * size);
 
   if (!xs_coords_ptr)
     {
@@ -66,7 +67,7 @@ ch_xs_coords_realloc (ChXSCoords *xs_coords_ptr, size_t size)
     return xs_coords_ptr;
 
   errno                         = 0;
-  ChXSCoords *new_xs_coords_ptr = realloc (
+  ChXSCoords *new_xs_coords_ptr = ch_realloc (
       xs_coords_ptr, sizeof (ChXSCoords) + size * sizeof (ChXSCoordinate));
   if (NULL == new_xs_coords_ptr || errno != 0)
     {
@@ -87,7 +88,7 @@ ch_xs_coords_free (ChXSCoords *xs_coords_ptr)
 {
   if (!xs_coords_ptr)
     return;
-  free (xs_coords_ptr);
+  ch_free (xs_coords_ptr);
 }
 
 size_t

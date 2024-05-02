@@ -61,7 +61,7 @@ ch_xs_subsect_new (ChXSCoords *coords_ptr,
   size_t n_subdivs = rough_arr_ptr->length;
 
   errno                    = 0;
-  ChXSSubSect *subsect_ptr = malloc (sizeof (ChXSSubSect));
+  ChXSSubSect *subsect_ptr = ch_malloc (sizeof (ChXSSubSect));
   if (NULL == subsect_ptr || errno != 0)
     {
       perror ("malloc");
@@ -70,7 +70,7 @@ ch_xs_subsect_new (ChXSCoords *coords_ptr,
   subsect_ptr->main_channel = main_channel;
   subsect_ptr->n_subdivs    = n_subdivs;
 
-  subsect_ptr->subdivs = malloc (n_subdivs * sizeof (ChXSSubdiv *));
+  subsect_ptr->subdivs = ch_malloc (n_subdivs * sizeof (ChXSSubdiv *));
   if (NULL == subsect_ptr->subdivs || errno != 0)
     {
       perror ("malloc");
@@ -107,6 +107,6 @@ ch_xs_subsect_free (ChXSSubSect *subsect_ptr)
       ch_xs_subdiv_free (subsect_ptr->subdivs[i]);
     }
 
-  free (subsect_ptr->subdivs);
-  free (subsect_ptr);
+  ch_free (subsect_ptr->subdivs);
+  ch_free (subsect_ptr);
 }

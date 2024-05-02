@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "ch_mem.h"
 #include "ch_xs.h"
 
 ChXSSubdiv *
@@ -13,7 +14,7 @@ ch_xs_subdiv_new (double roughness, ChXSCoords *coords_ptr)
   assert (ch_xs_coords_validate (coords_ptr));
 
   errno                  = 0;
-  ChXSSubdiv *subdiv_ptr = malloc (sizeof (ChXSSubdiv));
+  ChXSSubdiv *subdiv_ptr = ch_malloc (sizeof (ChXSSubdiv));
   if (subdiv_ptr == NULL || errno != 0)
     {
       perror ("malloc");
@@ -43,7 +44,7 @@ ch_xs_subdiv_free (ChXSSubdiv *subdiv_ptr)
 
   ch_xs_coords_free (subdiv_ptr->coords);
   ch_xs_coords_free (subdiv_ptr->wet_coords);
-  free (subdiv_ptr);
+  ch_free (subdiv_ptr);
 }
 
 void

@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ch_mem.h"
+
 typedef struct
 {
   size_t size;
@@ -19,7 +21,7 @@ ch_arr_dbl_new (size_t size)
   assert (size);
 
   errno             = 0;
-  ChArrDbl *arr_ptr = malloc (sizeof (ChArrDbl) + sizeof (double) * size);
+  ChArrDbl *arr_ptr = ch_malloc (sizeof (ChArrDbl) + sizeof (double) * size);
 
   if (NULL == arr_ptr || errno != 0)
     {
@@ -44,7 +46,7 @@ ch_arr_dbl_realloc (ChArrDbl *arr_ptr, size_t size)
 
   errno = 0;
   ChArrDbl *new_arr_ptr =
-      realloc (arr_ptr, sizeof (ChArrDbl) + size * sizeof (double));
+      ch_realloc (arr_ptr, sizeof (ChArrDbl) + size * sizeof (double));
   if (NULL == new_arr_ptr || errno != 0)
     {
       perror ("realloc");
@@ -65,7 +67,7 @@ ch_arr_dbl_free (ChArrDbl *arr_ptr)
 {
   if (!arr_ptr)
     return;
-  free (arr_ptr);
+  ch_free (arr_ptr);
 }
 
 double
