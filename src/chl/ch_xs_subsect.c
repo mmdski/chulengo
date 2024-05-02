@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <chlib.h>
+#include <chl.h>
 
 #include "ch_arr_dbl.h"
 #include "ch_xs.h"

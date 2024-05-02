@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <chlib.h>
+#include <chl.h>
 
 int
 main (void)

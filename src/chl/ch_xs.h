@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include <chlib.h>
+#include <chl.h>
 
 typedef struct
 {

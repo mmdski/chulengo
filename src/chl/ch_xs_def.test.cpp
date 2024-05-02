@@ -4,7 +4,7 @@ extern "C"
 {
 #include <math.h>
 
-#include <chlib.h>
+#include <chl.h>
 }
 
 namespace
