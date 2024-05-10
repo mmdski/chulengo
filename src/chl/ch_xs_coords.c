@@ -10,7 +10,6 @@
 ChXSCoords *
 ch_xs_coords_new (size_t size)
 {
-  assert (size);
 
   errno = 0;
   ChXSCoords *xs_coords_ptr =
