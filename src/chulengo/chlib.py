@@ -4,9 +4,9 @@ import platform
 
 _file_path, _ = os.path.split(__file__)
 if platform.system() == "Windows":
-    _chlib_path = os.path.join(_file_path, "chl.pymem.dll")
+    _chlib_path = os.path.join(_file_path, "lib", "chl.pymem.dll")
 elif platform.system() == "Darwin":
-    _chlib_path = os.path.join(_file_path, "libchl.pymem.dylib")
+    _chlib_path = os.path.join(_file_path, "lib", "libchl.pymem.dylib")
 
 _chlib = CDLL(_chlib_path)
 

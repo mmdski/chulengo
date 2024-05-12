@@ -4,29 +4,15 @@
     "*.h": "c"
   },
   "cSpell.words": [
-    "BEAVCREK",
     "chlib",
-    "chulengo",
     "coeff",
-    "CRITCREK",
     "Domanski",
     "dtype",
     "ineff",
     "libchl",
-    "libchlib",
-    "linestyle",
-    "linewidth",
-    "markerfacecolor",
-    "markersize",
-    "ndim",
-    "Perim",
-    "pymem",
     "Subdiv",
     "subdivs",
-    "subsect",
-    "xlabel",
-    "XSWSE",
-    "ylabel"
+    "subsect"
   ],
   "cSpell.ignorePaths": [
     "package-lock.json",
@@ -40,5 +26,12 @@
   "C_Cpp.codeAnalysis.clangTidy.enabled": true,
   "C_Cpp.codeAnalysis.clangTidy.config": "${workspaceFolder}/.clang-tidy",
   "C_Cpp.codeAnalysis.runAutomatically": true,
-  "cmake.configureSettings": {}
+  "cmake.configureSettings": {
+    "BUILD_TESTS": true,
+    "INSTALL_GTEST": false,
+    "BUILD_GMOCK": false,
+    "ENABLE_ASAN": true,
+    "ENABLE_LSAN": true,
+    "ENABLE_UBSAN": true
+  }
 }

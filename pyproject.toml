@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core", "cython"]
+requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -19,13 +19,12 @@ cmake.verbose = true
 cmake.build-type = "Release"
 logging.level = "INFO"
 sdist.exclude = [
+    "examples/",
     ".vscode/",
     ".clang-format",
     ".clang-tidy",
     ".gitattributes",
     ".gitignore",
+    "src/chulengo/lib/*",
 ]
-
-[tool.scikit-build.cmake.define]
-SCIKIT_BUILD = "YES"
-BUILD_SHARED_LIBS = "YES"
+sdist.include = ["external/chl/CMakeLits.txt", "external/chl/src"]

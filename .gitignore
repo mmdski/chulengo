@@ -186,3 +186,6 @@ dmypy.json
 
 #
 setup.cfg
+
+src/chulengo/include
+!src/chulengo/lib

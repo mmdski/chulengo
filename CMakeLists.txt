@@ -1,32 +1,12 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.26)
 
-if(SCIKIT_BUILD)
-    project(${SKBUILD_PROJECT_NAME} LANGUAGES C CXX)
+if(NOT DEFINED SKBUILD)
+    set(PROJECT_NAME chulengo)
 else()
-    project(chl LANGUAGES C CXX)
+    set(PROJECT_NAME ${SKBUILD_PROJECT_NAME})
 endif()
 
-option(BUILD_TESTS "Build tests" NO)
-
-if(PROJECT_IS_TOP_LEVEL)
-    include(cmake/Sanitizers.cmake)
-endif()
-
-include(FetchContent)
-
-if(BUILD_TESTS)
-    FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG v1.14.0
-    )
-
-    # For Windows: Prevent overriding the parent project's compiler/linker settings
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-    enable_testing()
-    include(GoogleTest)
-endif()
+project(${PROJECT_NAME} LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
@@ -38,19 +18,16 @@ if(MSVC)
 
 else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
-
-    if(COVERAGE)
-        add_compile_options(--coverage)
-        add_link_options(--coverage)
-    endif()
 endif()
 
-if(SCIKIT_BUILD)
-    find_package(Python COMPONENTS Development REQUIRED)
-    add_compile_definitions(PY_BUILD)
-endif()
-
-#
-# Build library
-#
-add_subdirectory(src/chl)
+include(ExternalProject)
+set(chl_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}chl${CMAKE_STATIC_LIBRARY_SUFFIX})
+ExternalProject_Add(chlExternal
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/chl
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}
+    CMAKE_ARGS
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    -D PY_MEM=YES
+    -D BUILD_SHARED_LIBS=YES
+)

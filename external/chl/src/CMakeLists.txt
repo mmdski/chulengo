@@ -13,11 +13,12 @@ target_sources(chl
     chl.h
 )
 
-if(SCIKIT_BUILD)
+if(PY_MEM)
     set_target_properties(chl PROPERTIES OUTPUT_NAME "chl.pymem")
     target_link_libraries(chl PRIVATE Python::Python)
-    install(TARGETS chl DESTINATION ${SKBUILD_PROJECT_NAME})
 endif()
+
+install(TARGETS chl FILE_SET HEADERS DESTINATION include)
 
 if(BUILD_TESTS)
     add_executable(ch_xs_coords.test ch_xs_coords.test.cpp)
