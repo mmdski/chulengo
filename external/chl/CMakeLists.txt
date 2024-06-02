@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
 option(BUILD_TESTS "Build tests" NO)
+option(BUILD_EXAMPLES "Build examples" NO)
 option(PY_MEM "Use PyMem" NO)
 
 if(PROJECT_IS_TOP_LEVEL)
@@ -37,3 +38,7 @@ if(PY_MEM)
 endif()
 
 add_subdirectory(src)
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

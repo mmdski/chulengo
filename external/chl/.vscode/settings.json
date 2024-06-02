@@ -28,6 +28,7 @@
   "C_Cpp.codeAnalysis.runAutomatically": true,
   "cmake.configureSettings": {
     "BUILD_TESTS": true,
+    "BUILD_EXAMPLES": true,
     "INSTALL_GTEST": false,
     "BUILD_GMOCK": false,
     "ENABLE_ASAN": true,
