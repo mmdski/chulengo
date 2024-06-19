@@ -5,8 +5,11 @@ import platform
 _file_path, _ = os.path.split(__file__)
 if platform.system() == "Windows":
     _chlib_path = os.path.join(_file_path, "chl.dll")
+elif platform.system() == "Linux":
+    _chlib_path = os.path.join(_file_path, "libchl.so")
 elif platform.system() == "Darwin":
     _chlib_path = os.path.join(_file_path, "libchl.dylib")
+
 
 _chlib = CDLL(_chlib_path)
 
