@@ -1,12 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-if(NOT DEFINED SKBUILD)
-    set(PROJECT_NAME chulengo)
-else()
-    set(PROJECT_NAME ${SKBUILD_PROJECT_NAME})
-endif()
-
-project(${PROJECT_NAME} LANGUAGES C)
+project(${SKBUILD_PROJECT_NAME} LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
@@ -20,14 +14,12 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-include(ExternalProject)
-set(chl_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}chl${CMAKE_STATIC_LIBRARY_SUFFIX})
-ExternalProject_Add(chlExternal
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/chl
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}
-    CMAKE_ARGS
-    -D CMAKE_BUILD_TYPE=Release
-    -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    -D PY_MEM=YES
-    -D BUILD_SHARED_LIBS=YES
-)
+set(BUILD_SHARED_LIBS ON)
+
+add_subdirectory(external)
+
+install(TARGETS chl DESTINATION ${SKBUILD_PROJECT_NAME})
+
+set(PYBIND11_NEWPYTHON ON)
+set(PYBIND11_FINDPYTHON ON)
+find_package(pybind11 CONFIG REQUIRED)

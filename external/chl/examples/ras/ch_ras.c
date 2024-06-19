@@ -10,7 +10,7 @@
 
 static int  ch_err_no = 0;
 static char ch_err_message[CH_ERR_MSG_CHARS];
-static char ch_err_line[CH_RAS_LINE_MAX_CHARS];
+// static char ch_err_line[CH_RAS_LINE_MAX_CHARS];
 
 typedef struct
 {
@@ -62,7 +62,7 @@ ch_ras_file_read (FILE *f)
 
   errno         = 0;
   size_t length = (size_t) ftell (f);
-  if (f < 0 || errno != 0)
+  if (length < 0 || errno != 0)
     {
       perror ("ftell");
       return NULL;
@@ -117,6 +117,8 @@ ch_ras_geom_parse (ChFileContents *fc_ptr)
   fc_ptr->line_no = 1;
   fc_ptr->pos     = 0;
 
+  size_t fail_line_no = 0;
+
   errno    = 0;
   line_ptr = malloc (sizeof (ChFileLine));
   if (!line_ptr || errno != 0)
@@ -132,8 +134,6 @@ ch_ras_geom_parse (ChFileContents *fc_ptr)
       goto parse_fail;
     }
   geom_ptr->reach = NULL;
-
-  size_t fail_line_no = 0;
 
   /* read the geometry title */
   size_t n_read = ch_ras_file_read_line (fc_ptr, line_ptr);

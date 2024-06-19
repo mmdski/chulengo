@@ -1,0 +1,2 @@
+add_executable(ex_json_persistence persistence_example.c)
+target_link_libraries(ex_json_persistence PRIVATE parson::parson)

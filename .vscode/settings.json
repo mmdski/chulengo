@@ -40,5 +40,9 @@
   "C_Cpp.codeAnalysis.clangTidy.enabled": true,
   "C_Cpp.codeAnalysis.clangTidy.config": "${workspaceFolder}/.clang-tidy",
   "C_Cpp.codeAnalysis.runAutomatically": true,
-  "cmake.configureSettings": {}
+  "cmake.configureSettings": {},
+  "cmake.configureOnOpen": false,
+  "cmake.configureOnEdit": false,
+  "mesonbuild.configureOnOpen": false,
+  "mesonbuild.selectRootDir": false
 }

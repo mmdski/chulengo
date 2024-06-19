@@ -1,0 +1,5 @@
+{
+  "cmake.configureSettings": { "PARSON_BUILD_TESTS": true },
+  "mesonbuild.configureOnOpen": false,
+  "makefile.configureOnOpen": false
+}

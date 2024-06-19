@@ -1,21 +1,32 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.23)
 
 project(chl LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-option(BUILD_TESTS "Build tests" NO)
-option(BUILD_EXAMPLES "Build examples" NO)
-option(PY_MEM "Use PyMem" NO)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+option(chl_BUILD_TESTS "Build tests" NO)
+option(chl_BUILD_EXAMPLES "Build examples" NO)
+option(chl_PY_MEM "Use PyMem" NO)
 
 if(PROJECT_IS_TOP_LEVEL)
     include(cmake/Sanitizers.cmake)
+
+    if(MSVC)
+        # /wd6326 "Potential comparison of a constant with another constant."
+        # /wd4200 "nonstandard extension used: zero-sized array in struct/union"
+        add_compile_options(/guard:cf /analyze /permissive- /W4 /WX /wd6326 /wd4200)
+
+    else()
+        add_compile_options(-Wall -Wextra -pedantic -Werror)
+    endif()
 endif()
 
-include(FetchContent)
-
-if(BUILD_TESTS)
+if(chl_BUILD_TESTS)
+    include(FetchContent)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
@@ -29,16 +40,16 @@ if(BUILD_TESTS)
     include(GoogleTest)
 endif()
 
-if(PY_MEM)
-    add_compile_definitions(PY_MEM)
+if(chl_PY_MEM)
     find_package(
         Python
         COMPONENTS Development
         REQUIRED)
 endif()
 
+add_subdirectory(external)
 add_subdirectory(src)
 
-if(BUILD_EXAMPLES)
+if(chl_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

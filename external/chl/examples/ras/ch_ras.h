@@ -27,6 +27,21 @@ typedef struct
   ChRASGeomReach *reach;
 } ChRASGeom;
 
+typedef enum
+{
+  kChRASNodeXS     = 1,
+  kChRASNodeBridge = 3
+} ChRASNodeType;
+
+typedef struct
+{
+  ChRASNodeType type;
+  char          rm[9];
+  double        length_l;
+  double        length_ch;
+  double        length_r;
+} ChRASNode;
+
 void ch_cpy_err_msg (char *dst);
 
 ChFileContents *ch_ras_file_read (FILE *f);

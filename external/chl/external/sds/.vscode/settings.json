@@ -1,0 +1,5 @@
+{
+  "cmake.configureSettings": {
+    "sds_BUILD_TEST": true
+  }
+}

@@ -63,5 +63,8 @@ main (void)
   ch_ras_geom_free (geom_ptr);
   free (fc_ptr);
 
+  ChRASGeomReach *reach = malloc (sizeof (ChRASGeomReach));
+  printf ("%lu\n", sizeof (reach->reach_name) / sizeof (char));
+
   return EXIT_SUCCESS;
 }
