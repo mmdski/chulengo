@@ -19,7 +19,3 @@ set(BUILD_SHARED_LIBS ON)
 add_subdirectory(external)
 
 install(TARGETS chl DESTINATION ${SKBUILD_PROJECT_NAME})
-
-set(PYBIND11_NEWPYTHON ON)
-set(PYBIND11_FINDPYTHON ON)
-find_package(pybind11 CONFIG REQUIRED)
