@@ -49,6 +49,24 @@ endif()
 
 add_subdirectory(src)
 
+set(chl_HPP_SRCS
+  src/xs/coordarray.cpp
+)
+add_library(chlcpp ${chl_HPP_SRCS})
+add_library(chl::chlcpp ALIAS chlcpp)
+target_sources(chlcpp
+  PUBLIC
+  FILE_SET HEADERS
+  BASE_DIRS include
+)
+
+if(chl_BUILD_TESTS)
+  add_executable(chl.xs.coordarray.test src/xs/coordarray.test.cpp)
+  target_link_libraries(chl.xs.coordarray.test PRIVATE chl::chlcpp GTest::gtest_main)
+  gtest_add_tests(TARGET chl.xs.coordarray.test TEST_LIST chl.xs.coordarray.test-list)
+  set_tests_properties(${chl.xs.cooarray.test-list} PROPERTIES ENVIRONMENT "${TEST_ENV}")
+endif()
+
 if(chl_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
